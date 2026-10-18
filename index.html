@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관계기업 합산 시뮬레이터</title>
+<style>
+  :root {
+    --primary: #1e3a8a;
+    --primary-light: #2563eb;
+    --primary-dark: #172554;
+    --success: #059669;
+    --danger: #dc2626;
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #cbd5e1;
+    --text: #0f172a;
+    --text-muted: #64748b;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 16px;
+  }
+  .container {
+    max-width: 840px;
+    margin: 0 auto 40px auto;
+  }
+  header {
+    background-color: var(--card-bg);
+    padding: 24px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-top: 5px solid var(--primary);
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  header h1 {
+    font-size: 1.6rem;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+  header .subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  header .intro {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    background-color: #f1f5f9;
+    padding: 12px 14px;
+    border-radius: 6px;
+    line-height: 1.5;
+  }
+  .card {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .card-title {
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 8px;
+  }
+  .form-group {
+    margin-bottom: 16px;
+  }
+  .form-group:last-child {
+    margin-bottom: 0;
+  }
+  label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #334155;
+  }
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-control:focus {
+    border-color: var(--primary-light);
+  }
+  input[type="number"] {
+    text-align: right;
+  }
+  .subtext {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+  }
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #334155;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+  }
+  .investment-row {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .investment-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 12px;
+    align-items: end;
+  }
+  @media (max-width: 680px) {
+    .investment-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background-color: var(--primary);
+    color: #fff;
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+  }
+  .btn-primary:hover {
+    background-color: var(--primary-light);
+  }
+  .btn-secondary {
+    background-color: #f1f5f9;
+    color: var(--primary);
+    border: 1px dashed var(--primary);
+    width: 100%;
+  }
+  .btn-secondary:hover {
+    background-color: #e2e8f0;
+  }
+  .btn-danger-outline {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  .btn-danger-outline:hover {
+    background-color: #fef2f2;
+  }
+  .btn-reset {
+    background-color: #e2e8f0;
+    color: #334155;
+    margin-top: 14px;
+    width: 100%;
+  }
+  .btn-reset:hover {
+    background-color: #cbd5e1;
+  }
+  #result-section {
+    display: none;
+  }
+  .result-banner {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .result-banner.pass {
+    background-color: #ecfdf5;
+    border: 2px solid var(--success);
+    color: var(--success);
+  }
+  .result-banner.fail {
+    background-color: #fef2f2;
+    border: 2px solid var(--danger);
+    color: var(--danger);
+  }
+  .result-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .result-reason {
+    font-size: 0.95rem;
+    color: #334155;
+  }
+  .stat-highlight {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .stat-highlight .label {
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .stat-highlight .value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+  }
+  .table-responsive {
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+  }
+  th, td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+  }
+  td.numeric, th.numeric {
+    text-align: right;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .tag-yes {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+  .tag-no {
+    background-color: #e2e8f0;
+    color: #475569;
+  }
+  .disclaimer-box {
+    margin-top: 24px;
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .blog-footer {
+    margin-top: 24px;
+    padding: 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-align: center;
+  }
+  .blog-btn {
+    display: inline-block;
+    background-color: #03c75a;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .blog-btn:hover {
+    background-color: #02b350;
+  }
+  .blog-text-link {
+    display: block;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .blog-text-link:hover {
+    text-decoration: underline;
+  }
+  .grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .grid-2col {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>관계기업 합산 시뮬레이터</h1>
+    <div class="subtitle">경영지도사 안경린의 중소기업 스케일업 — 중소기업확인서 발급 전 지분 구조 점검</div>
+    <div class="intro">
+      "우리 회사 매출은 작은데, 투자받은 지분 때문에 중소기업확인서가 안 나올 수 있습니다. 지분 구조를 입력해 합산 판정 매출액을 확인해 보세요."
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="card-title">1. 자사 정보 입력</div>
+    
+    <div class="form-group">
+      <label for="sectorSelect">주된 업종 선택</label>
+      <select id="sectorSelect" class="form-control" onchange="onSectorChange()">
+        <option value="1800">제조업</option>
+        <option value="1300">건설업</option>
+        <option value="1200">도매 및 소매업</option>
+        <option value="1000">운수 및 창고업</option>
+        <option value="1000">정보통신업</option>
+        <option value="800">전문·과학·기술 서비스업</option>
+        <option value="400">숙박·음식점업·금융·보험·부동산·교육</option>
+        <option value="600">기타 서비스업</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="scaleThreshold">업종별 규모기준 (3년 평균매출액 상한, 억원)</label>
+      <input type="number" id="scaleThreshold" class="form-control" value="1800" min="0" step="any">
+      <span class="subtext">2025년 9월 시행 개정 기준 대표값이며 세부 업종에 따라 다릅니다</span>
+    </div>
+
+    <div class="grid-2col">
+      <div class="form-group">
+        <label for="myRevenue">자사 3년 평균 매출액 (억원)</label>
+        <input type="number" id="myRevenue" class="form-control" placeholder="0" min="0" step="any">
+      </div>
+      <div class="form-group">
+        <label for="myAssets">자사 자산총액 (억원)</label>
+        <input type="number" id="myAssets" class="form-control" placeholder="0" min="0" step="any">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-group">
+        <input type="checkbox" id="conglomerateCheck">
+        <span>상호출자제한기업집단(대기업집단)에 소속되어 있음</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. 출자관계 입력</div>
+    <div id="investmentsList"></div>
+    <button type="button" class="btn btn-secondary" onclick="addInvestmentRow()">+ 출자관계 추가</button>
+  </div>
+
+  <div style="margin-bottom: 24px;">
+    <button type="button" class="btn btn-primary" onclick="calculate()">판정 매출액 및 중소기업 해당 여부 확인</button>
+  </div>
+
+  <div id="result-section" class="card">
+    <div class="card-title">진단 결과</div>
+
+    <div class="stat-highlight">
+      <div class="label">관계기업 합산 판정 매출액</div>
+      <div class="value" id="resTotalRevenue">0 억원</div>
+      <div class="subtext" id="resCalcSummary" style="margin-top:6px;"></div>
+    </div>
+
+    <div id="resultBanner" class="result-banner">
+      <div class="result-title" id="resStatusTitle"></div>
+      <div class="result-reason" id="resStatusDetail"></div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <h3 style="font-size: 1rem; color: var(--text); margin-bottom: 8px;">관계기업 판정 및 합산 내역</h3>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>상대기업명</th>
+              <th class="numeric">지분율</th>
+              <th>최다출자자</th>
+              <th>판정결과 및 사유</th>
+              <th class="numeric">적용 합산율</th>
+              <th class="numeric">상대 매출액</th>
+              <th class="numeric">합산 반영액</th>
+            </tr>
+          </thead>
+          <tbody id="resTableBody">
+          </tbody>
+        </table>
+      </div>
+      <div class="subtext" style="margin-top: 10px; line-height: 1.4;">
+        관계기업 제도는 지배기업이 외부감사 대상 기업인 경우 등에 성립합니다. 세부 요건(특수관계인 합산, 간접지배 2단계 등)은 중소기업기본법 시행령 제3조의2를 확인하세요.
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-reset" onclick="resetForm()">다시 계산하기</button>
+  </div>
+
+  <div class="disclaimer-box">
+    본 시뮬레이터는 참고용입니다. 최종 판정은 중소기업현황정보시스템(sminfo.go.kr) 및 관할 기관에서 확인하시기 바랍니다.
+  </div>
+
+  <div class="blog-footer">
+    <a href="https://blog.naver.com/lge130287/224444625748" target="_blank" rel="noopener noreferrer" class="blog-btn">자세한 해설: 블로그 글 보기</a>
+    <a href="https://blog.naver.com/lge130287" target="_blank" rel="noopener noreferrer" class="blog-text-link">경영지도사 안경린의 중소기업 스케일업</a>
+  </div>
+</div>
+
+<script>
+  let rowCounter = 0;
+
+  function onSectorChange() {
+    const select = document.getElementById("sectorSelect");
+    document.getElementById("scaleThreshold").value = select.value;
+  }
+
+  function addInvestmentRow(data = {}) {
+    rowCounter++;
+    const container = document.getElementById("investmentsList");
+    const row = document.createElement("div");
+    row.className = "investment-row";
+    row.id = `inv-row-${rowCounter}`;
+
+    row.innerHTML = `
+      <div class="investment-grid">
+        <div class="form-group">
+          <label>상대기업명</label>
+          <input type="text" class="form-control inv-name" placeholder="예: (주)투자사" value="${data.name || ''}">
+        </div>
+        <div class="form-group">
+          <label>보유 지분율 (%)</label>
+          <input type="number" class="form-control inv-share" placeholder="0" min="0" max="100" step="any" value="${data.share !== undefined ? data.share : ''}">
+        </div>
+        <div class="form-group" style="padding-bottom: 8px;">
+          <label class="checkbox-group" style="margin: 0;">
+            <input type="checkbox" class="inv-largest" ${data.largest ? 'checked' : ''}>
+            <span>최다출자자임</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>상대 3년 평균매출(억원)</label>
+          <input type="number" class="form-control inv-revenue" placeholder="0" min="0" step="any" value="${data.revenue !== undefined ? data.revenue : ''}">
+        </div>
+      </div>
+      <div style="text-align: right; margin-top: 8px;">
+        <button type="button" class="btn btn-danger-outline" onclick="removeRow(${rowCounter})">삭제</button>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+
+  function removeRow(id) {
+    const target = document.getElementById(`inv-row-${id}`);
+    if (target) {
+      target.remove();
+    }
+  }
+
+  function calculate() {
+    const threshold = parseFloat(document.getElementById("scaleThreshold").value) || 0;
+    const myRevenue = parseFloat(document.getElementById("myRevenue").value) || 0;
+    const myAssets = parseFloat(document.getElementById("myAssets").value) || 0;
+    const isConglomerate = document.getElementById("conglomerateCheck").checked;
+
+    const rows = document.querySelectorAll(".investment-row");
+    let totalAddedRevenue = 0;
+    const rowResults = [];
+    const addedBreakdowns = [];
+
+    rows.forEach(r => {
+      const name = r.querySelector(".inv-name").value.trim() || "미입력 기업";
+      const share = parseFloat(r.querySelector(".inv-share").value) || 0;
+      const isLargest = r.querySelector(".inv-largest").checked;
+      const otherRevenue = parseFloat(r.querySelector(".inv-revenue").value) || 0;
+
+      let isRelated = false;
+      let reason = "";
+
+      if (share >= 30 && isLargest) {
+        isRelated = true;
+        reason = `관계기업 해당: 지분율 ${share}%로 30% 이상 + 최다출자자`;
+      } else {
+        const reasons = [];
+        if (share < 30) reasons.push("지분율 30% 미만");
+        if (!isLargest) reasons.push("최다출자자 아님");
+        reason = reasons.join(", ");
+      }
+
+      let rate = 0;
+      let added = 0;
+
+      if (isRelated) {
+        if (share >= 50) {
+          rate = 1.0;
+        } else {
+          rate = share / 100.0;
+        }
+        added = otherRevenue * rate;
+        totalAddedRevenue += added;
+        if (added > 0) {
+          addedBreakdowns.push(`${name} (+${formatNumber(added)}억원)`);
+        }
+      }
+
+      rowResults.push({
+        name,
+        share,
+        isLargest,
+        isRelated,
+        reason,
+        ratePercent: (rate * 100),
+        otherRevenue,
+        added
+      });
+    });
+
+    const finalRevenue = myRevenue + totalAddedRevenue;
+
+    // 판정 로직
+    let isPass = true;
+    let title = "";
+    let detail = "";
+
+    if (isConglomerate) {
+      isPass = false;
+      title = "중소기업 해당 안 됨";
+      detail = "독립성 기준 미충족: 상호출자제한기업집단(대기업집단) 소속";
+    } else if (myAssets >= 5000) {
+      isPass = false;
+      title = "중소기업 해당 안 됨";
+      detail = `자산총액 상한 5,000억원 초과 (자사 자산: ${formatNumber(myAssets)}억원)`;
+    } else if (finalRevenue > threshold) {
+      isPass = false;
+      title = "중소기업 해당 안 됨";
+      let extraInfo = `판정 매출액(${formatNumber(finalRevenue)}억원)이 업종 규모기준(${formatNumber(threshold)}억원)을 초과했습니다 (규모기준 초과 — 관계기업 합산 영향).`;
+      if (addedBreakdowns.length > 0) {
+        extraInfo += ` [합산 내역: ${addedBreakdowns.join(", ")}]`;
+      }
+      detail = extraInfo;
+    } else {
+      isPass = true;
+      title = "중소기업 해당 가능";
+      detail = `규모·자산 기준 충족 (판정 매출액: ${formatNumber(finalRevenue)}억원 / 기준: ${formatNumber(threshold)}억원, 자산: ${formatNumber(myAssets)}억원)`;
+    }
+
+    // 결과 렌더링
+    document.getElementById("resTotalRevenue").innerText = `${formatNumber(finalRevenue)} 억원`;
+    document.getElementById("resCalcSummary").innerText = `(자사 매출 ${formatNumber(myRevenue)}억원 + 관계기업 합산 ${formatNumber(totalAddedRevenue)}억원 / 규모기준: ${formatNumber(threshold)}억원)`;
+
+    const banner = document.getElementById("resultBanner");
+    banner.className = `result-banner ${isPass ? 'pass' : 'fail'}`;
+    document.getElementById("resStatusTitle").innerText = title;
+    document.getElementById("resStatusDetail").innerText = detail;
+
+    const tbody = document.getElementById("resTableBody");
+    tbody.innerHTML = "";
+
+    if (rowResults.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 16px;">등록된 출자관계가 없습니다.</td></tr>`;
+    } else {
+      rowResults.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(item.name)}</strong></td>
+          <td class="numeric">${formatNumber(item.share)}%</td>
+          <td>${item.isLargest ? '예' : '아니오'}</td>
+          <td>
+            <span class="tag ${item.isRelated ? 'tag-yes' : 'tag-no'}">${item.isRelated ? '관계기업' : '해당없음'}</span>
+            <span style="font-size:0.8rem; display:block; margin-top:2px;">${escapeHtml(item.reason)}</span>
+          </td>
+          <td class="numeric">${item.isRelated ? (item.ratePercent >= 100 ? '100% (50%이상)' : item.ratePercent + '%') : '-'}</td>
+          <td class="numeric">${formatNumber(item.otherRevenue)}억원</td>
+          <td class="numeric" style="font-weight: 600; color: ${item.added > 0 ? 'var(--danger)' : 'inherit'};">
+            ${item.isRelated ? '+' + formatNumber(item.added) + '억원' : '0억원'}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("result-section").style.display = "block";
+    document.getElementById("result-section").scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function resetForm() {
+    document.getElementById("sectorSelect").selectedIndex = 0;
+    onSectorChange();
+    document.getElementById("myRevenue").value = "";
+    document.getElementById("myAssets").value = "";
+    document.getElementById("conglomerateCheck").checked = false;
+    document.getElementById("investmentsList").innerHTML = "";
+    document.getElementById("result-section").style.display = "none";
+    addInvestmentRow();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function formatNumber(num) {
+    if (isNaN(num)) return "0";
+    return Number(num).toLocaleString('ko-KR', { maximumFractionDigits: 2 });
+  }
+
+  function escapeHtml(string) {
+    return String(string).replace(/[&<>"']/g, function (s) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[s];
+    });
+  }
+
+  // 초기화 실행
+  addInvestmentRow();
+</script>
+</body>
+</html>
