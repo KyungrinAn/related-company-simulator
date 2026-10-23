@@ -335,6 +335,21 @@
       font-weight: 600;
     }
     .blog-text-link:hover { text-decoration: underline; }
+
+    .compare-heading { font-size: 1.1rem; margin: 30px 0 6px; color: var(--gray-900); }
+    .compare-sub { font-size: 0.88rem; color: var(--gray-600); margin: 0 0 6px; }
+    .compare-table th { width: auto; }
+    .compare-table thead th { background: var(--primary-light); color: var(--primary); text-align: center; }
+    .compare-table tbody th { width: 18%; white-space: nowrap; }
+    .compare-table td { width: 41%; }
+    .verdict-heading { font-size: 1rem; margin: 18px 0 4px; color: var(--gray-900); }
+    .verdict-table th { width: auto; }
+    .verdict-table thead th { background: rgba(0,0,0,0.03); }
+    .v-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+    .v-ok { background: var(--success-light); color: var(--success); }
+    .v-no { background: var(--danger-light); color: var(--danger); }
+    .v-warn { background: var(--warning-light); color: var(--warning); }
+    .v-info { background: var(--primary-light); color: var(--primary); }
   </style>
 </head>
 <body>
@@ -353,6 +368,23 @@
     </div>
     <span class="total-badge">※ 「혁신제품 지정 및 구매촉진 등에 관한 규정」 제6조의2 (최장 6년 유지 가능)</span>
   </header>
+
+
+  <h2 class="compare-heading">1차·2차 연장 요건 한눈에 비교</h2>
+  <p class="compare-sub">진단 전에 두 차수의 요건 차이부터 확인하세요. 두 차수 모두 결격 사유가 있으면 심의 대상에서 제외됩니다.</p>
+  <table class="meta-table compare-table">
+    <thead>
+      <tr><th>구분</th><th>1차 연장</th><th>2차 연장</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>대상</th><td>기본 지정기간(3년) 만료 예정</td><td>1차 연장기간 만료 예정</td></tr>
+      <tr><th>연장 기간</th><td>1년 (원칙)</td><td>2년 (원칙) — 기본 3년+1차 1년+2차 2년, 최장 6년</td></tr>
+      <tr><th>근거 공고</th><td>중소벤처기업부 제2026-566호</td><td>중소벤처기업부 제2026-567호</td></tr>
+      <tr><th>실적 요건</th><td colspan="2">공공조달 매출 실적 · 매출계약 체결(미납품) · 경진대회 입상 또는 중앙관서 표창 중 1개 이상</td></tr>
+      <tr><th>추가 요건</th><td>없음</td><td>유사기술 부재 또는 기술 탁월성을 조달정책심의위원회가 인정</td></tr>
+      <tr><th>공통 결격</th><td colspan="2">부정당업자 제재(입찰참가자격 제한) 진행 중이거나 적용 기술의 유효성이 상실된 경우 제외</td></tr>
+    </tbody>
+  </table>
 
   <form id="diagForm" onsubmit="handleDiagnose(event)">
     <!-- 질문 1 -->
@@ -465,6 +497,14 @@
       <h2 id="result-title" class="result-title"></h2>
       <div id="result-desc" class="result-desc"></div>
       
+      <h3 class="verdict-heading">질문별 판정 내역</h3>
+      <table class="meta-table verdict-table">
+        <thead>
+          <tr><th>점검 항목</th><th>내 답변</th><th>판정</th><th>사유</th></tr>
+        </thead>
+        <tbody id="verdict-body"></tbody>
+      </table>
+      
       <table class="meta-table" id="meta-table">
         <tbody>
           <tr>
@@ -541,6 +581,39 @@
     // 리셋 스타일 클래스
     resultCard.className = 'result-card';
     metaTable.classList.remove('hidden');
+
+    // 질문별 판정 내역 표 생성
+    const perfNames = { perf1: '공공조달 매출 실적', perf2: '매출계약 체결(미납품)', perf3: '경진대회 입상·중앙관서 표창' };
+    const q4List = Array.from(document.querySelectorAll('input[name="q4"]:checked')).map(el => perfNames[el.value] || el.value);
+    const badge = (cls, txt) => `<span class="v-badge ${cls}">${txt}</span>`;
+    const rows = [];
+    rows.push(['지정기간 단계',
+      q1 === 'A' ? '기본 지정기간(3년) 만료 예정' : '1차 연장기간(1년) 만료 예정',
+      badge('v-info', q1 === 'A' ? '1차 대상' : '2차 대상'),
+      q1 === 'A' ? '1차 연장 공고(제2026-566호) 대상입니다' : '2차 연장 공고(제2026-567호) 대상입니다']);
+    rows.push(['부정당업자 제재',
+      q2 === 'yes' ? '예 (제재 진행 중)' : '아니오',
+      q2 === 'yes' ? badge('v-no', '결격') : badge('v-ok', '충족'),
+      q2 === 'yes' ? '입찰참가자격 제한 진행 중이면 심의 전 제외될 수 있습니다' : '결격 사유 없음']);
+    rows.push(['적용 기술 유효성',
+      q3 === 'yes' ? '예 (유효성 상실)' : '아니오',
+      q3 === 'yes' ? badge('v-no', '결격') : badge('v-ok', '충족'),
+      q3 === 'yes' ? '기술 유효성·혁신성이 상실되면 연장 대상에서 제외될 수 있습니다' : '기술 유효성 정상 유지 중']);
+    rows.push(['실적 요건',
+      q4List.length ? q4List.join(', ') : '해당 항목 없음',
+      q4Checked ? badge('v-ok', '충족') : badge('v-no', '미충족'),
+      q4Checked ? `실적 요건 중 ${q4List.length}개 항목이 해당됩니다` : '매출 실적·미납품 계약·표창 중 해당 항목이 없어 보완이 필요합니다']);
+    if (q1 === 'B') {
+      const q5Map = {
+        yes: ['예 (입증 자료 보유)', badge('v-ok', '충족'), '유사기술 부재 또는 기술 탁월성 입증이 가능합니다'],
+        no: ['아니오 (유사기술 다수)', badge('v-no', '미충족'), '유사·대체 기술이 많아 위원회 인정이 어렵습니다'],
+        unknown: ['잘 모르겠음', badge('v-warn', '보완 필요'), '위원회 판단 사항 — 기술 차별성 소명 자료 준비가 필요합니다']
+      };
+      const m = q5Map[q5] || q5Map.unknown;
+      rows.push(['기술 탁월성 (2차 전용)', m[0], m[1], m[2]]);
+    }
+    document.getElementById('verdict-body').innerHTML =
+      rows.map(r => `<tr><th>${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
 
     // 1. 결격 사유 체크 (질문2 '예' 또는 질문3 '예')
     if (q2 === 'yes' || q3 === 'yes') {
