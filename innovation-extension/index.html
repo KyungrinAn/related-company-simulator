@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>혁신제품 지정기간 연장 자가진단 — 1차·2차 신청 가능 여부 체크</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-light: #eff6ff;
+      --success: #047857;
+      --success-light: #ecfdf5;
+      --warning: #b45309;
+      --warning-light: #fffbeb;
+      --danger: #b91c1c;
+      --danger-light: #fef2f2;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --border-radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--gray-900);
+      background-color: var(--gray-50);
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    /* 단계 다이어그램 */
+    .step-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--border-radius);
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .step-box {
+      flex: 1;
+      text-align: center;
+      background: #ffffff;
+      padding: 8px 4px;
+      border-radius: 6px;
+      border: 1px solid #dbeafe;
+      color: var(--primary);
+    }
+
+    .step-arrow {
+      margin: 0 6px;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .total-badge {
+      display: block;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      font-weight: normal;
+    }
+
+    /* 공통 폼 스타일 */
+    .form-group {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius);
+    }
+
+    .question-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .badge-q {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .options-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .custom-control {
+      display: flex;
+      align-items: flex-start;
+      padding: 8px 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .custom-control:hover {
+      background-color: var(--gray-50);
+    }
+
+    .custom-control input {
+      margin-top: 4px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .hint-text {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-top: 4px;
+      padding-left: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* 버튼 */
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 24px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #1d4ed8;
+    }
+
+    /* 결과 카드 */
+    #result-section {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 2px dashed var(--gray-200);
+    }
+
+    .result-card {
+      padding: 20px;
+      border-radius: var(--border-radius);
+      border: 1px solid transparent;
+      margin-bottom: 20px;
+    }
+
+    .result-card.success {
+      background-color: var(--success-light);
+      border-color: #a7f3d0;
+      color: #065f46;
+    }
+
+    .result-card.warning {
+      background-color: var(--warning-light);
+      border-color: #fde68a;
+      color: #92400e;
+    }
+
+    .result-card.danger {
+      background-color: var(--danger-light);
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
+    .result-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #ffffff;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .meta-table th, .meta-table td {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--gray-100);
+      text-align: left;
+    }
+
+    .meta-table th {
+      background: rgba(0,0,0,0.02);
+      width: 32%;
+      color: var(--gray-700);
+    }
+
+    .meta-table td {
+      color: var(--gray-900);
+    }
+
+    .meta-table tr:last-child th,
+    .meta-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 면책 공고 */
+    .disclaimer {
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      line-height: 1.5;
+      background: var(--gray-100);
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 16px;
+    }
+
+    footer.disclaimer-footer {
+      border-top: 1px solid var(--gray-200);
+      margin-top: 24px;
+      padding-top: 16px;
+      text-align: justify;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      .container {
+        padding: 16px;
+      }
+      .step-diagram {
+        flex-direction: column;
+        gap: 6px;
+      }
+      .step-arrow {
+        transform: rotate(90deg);
+        margin: 2px 0;
+      }
+      .step-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>혁신제품 지정기간 연장 자가진단</h1>
+    <p class="subtitle">1차·2차 신청 가능 여부 체크 도구</p>
+    
+    <div class="step-diagram">
+      <div class="step-box">기본 지정<br><strong>3년</strong></div>
+      <div class="step-arrow">▶</div>
+      <div class="step-box">1차 연장<br><strong>1년</strong> (원칙)</div>
+      <div class="step-arrow">▶</div>
+      <div class="step-box">2차 연장<br><strong>2년</strong> (원칙)</div>
+    </div>
+    <span class="total-badge">※ 「혁신제품 지정 및 구매촉진 등에 관한 규정」 제6조의2 (최장 6년 유지 가능)</span>
+  </header>
+
+  <form id="diagForm" onsubmit="handleDiagnose(event)">
+    <!-- 질문 1 -->
+    <div class="form-group">
+      <div class="question-title">
+        <span class="badge-q">질문 1</span>
+        <span>현재 혁신제품의 지정기간 단계는 어디에 해당합니까?</span>
+      </div>
+      <div class="options-group">
+        <label class="custom-control">
+          <input type="radio" name="q1" value="A" required onchange="toggleQ5()">
+          <div><strong>기본 지정기간(3년) 만료 예정</strong> (1차 연장 대상)</div>
+        </label>
+        <label class="custom-control">
+          <input type="radio" name="q1" value="B" onchange="toggleQ5()">
+          <div><strong>1차 연장기간(1년) 만료 예정</strong> (2차 연장 대상)</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 질문 2 -->
+    <div class="form-group">
+      <div class="question-title">
+        <span class="badge-q">질문 2</span>
+        <span>현재 유효한 부정당업자 제재(입찰참가자격 제한)를 받고 있습니까?</span>
+      </div>
+      <div class="options-group">
+        <label class="custom-control">
+          <input type="radio" name="q2" value="yes" required>
+          <div>예 (현재 제재 처분 효력 진행 중)</div>
+        </label>
+        <label class="custom-control">
+          <input type="radio" name="q2" value="no">
+          <div>아니오 (제재 사실 없음 또는 해제됨)</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 질문 3 -->
+    <div class="form-group">
+      <div class="question-title">
+        <span class="badge-q">질문 3</span>
+        <span>지정된 혁신제품 적용 기술의 유효성이 상실되었습니까?</span>
+      </div>
+      <p class="hint-text">※ 기술 단종, 대체 신기술 등장으로 인한 혁신성 상실, 특허 권리 소멸 등</p>
+      <div class="options-group" style="margin-top: 8px;">
+        <label class="custom-control">
+          <input type="radio" name="q3" value="yes" required>
+          <div>예 (기술 상실 또는 혁신성 소멸)</div>
+        </label>
+        <label class="custom-control">
+          <input type="radio" name="q3" value="no">
+          <div>아니오 (기술 유효성 및 권리 정상 유지 중)</div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 질문 4 -->
+    <div class="form-group">
+      <div class="question-title">
+        <span class="badge-q">질문 4</span>
+        <span>지정기간 중 보유한 성과 및 실적을 모두 선택해주세요. (복수선택 가능)</span>
+      </div>
+      <div class="options-group">
+        <label class="custom-control">
+          <input type="checkbox" name="q4" value="perf1">
+          <div>지정기간 중 <strong>공공조달 매출 실적</strong> 보유</div>
+        </label>
+        <label class="custom-control">
+          <input type="checkbox" name="q4" value="perf2">
+          <div>매출계약은 체결했으나 아직 <strong>미납품 상태</strong></div>
+        </label>
+        <label class="custom-control">
+          <input type="checkbox" name="q4" value="perf3">
+          <div>혁신제품 관련 <strong>경진대회 입상</strong> 또는 <strong>중앙관서 시상·표창</strong> 보유</div>
+        </label>
+      </div>
+      <p class="hint-text">※ 해당하는 실적이 없으면 체크하지 않고 진행하십시오.</p>
+    </div>
+
+    <!-- 질문 5 (질문1 B선택 시 노출) -->
+    <div class="form-group hidden" id="group-q5">
+      <div class="question-title">
+        <span class="badge-q">질문 5</span>
+        <span>(2차 연장 전용) 적용 기술과 유사한 기술이 없거나 기술이 탁월하다고 평가받을 수 있습니까?</span>
+      </div>
+      <p class="hint-text">※ 2차 연장은 1차 요건 충족 외에도 심의위원회가 기술 탁월성·혁신성을 인정해야 합니다.</p>
+      <div class="options-group" style="margin-top: 8px;">
+        <label class="custom-control">
+          <input type="radio" name="q5" value="yes">
+          <div>예 (기술 탁월성 입증 자료 보유 또는 시장 내 독보적 유사기술 부재)</div>
+        </label>
+        <label class="custom-control">
+          <input type="radio" name="q5" value="no">
+          <div>아니오 (다수의 유사·대체 기술이 시장에 진입함)</div>
+        </label>
+        <label class="custom-control">
+          <input type="radio" name="q5" value="unknown">
+          <div>잘 모르겠음 (위원회 판단 필요)</div>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">자가진단 결과 확인하기</button>
+  </form>
+
+  <!-- 진단 결과 카드 -->
+  <div id="result-section" class="hidden">
+    <div id="result-card" class="result-card">
+      <h2 id="result-title" class="result-title"></h2>
+      <div id="result-desc" class="result-desc"></div>
+      
+      <table class="meta-table" id="meta-table">
+        <tbody>
+          <tr>
+            <th>근거 공고</th>
+            <td id="meta-notice">-</td>
+          </tr>
+          <tr>
+            <th>연장 기간</th>
+            <td id="meta-period">-</td>
+          </tr>
+          <tr>
+            <th>온라인 접수기간</th>
+            <td>2026. 9. 21. ~ 10. 28. (중소기업기술개발사업 종합관리시스템 SMTECH)</td>
+          </tr>
+          <tr>
+            <th>신청 경로</th>
+            <td>SMTECH(smtech.go.kr) 온라인 접수</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="disclaimer">
+      <strong>[참고용 자가진단 면책 공고]</strong><br>
+      본 도구는 「혁신제품 지정 및 구매촉진 등에 관한 규정」 제6조의2와 2026년 연장 공고를 바탕으로 한 참고용 자가진단입니다. 세부 심사 기준과 배점은 공고문에서 확인하시고, 최종 신청 가능 여부는 중소기업기술정보진흥원(TIPA) 성과확산실 또는 중소기업 통합콜센터(1357)로 확인하시기 바랍니다.
+    </div>
+  </div>
+
+  <footer class="disclaimer disclaimer-footer">
+    본 자가진단 서비스는 특정 업체의 유료 상담 유도나 개인정보 수집 없이 순수 제도 안내 및 자격 점검을 목적으로 운영됩니다.
+  </footer>
+</div>
+
+<script>
+  function toggleQ5() {
+    const q1Val = document.querySelector('input[name="q1"]:checked')?.value;
+    const q5Group = document.getElementById('group-q5');
+    const q5Radios = document.querySelectorAll('input[name="q5"]');
+
+    if (q1Val === 'B') {
+      q5Group.classList.remove('hidden');
+      q5Radios.forEach(r => r.required = true);
+    } else {
+      q5Group.classList.add('hidden');
+      q5Radios.forEach(r => {
+        r.required = false;
+        r.checked = false;
+      });
+    }
+  }
+
+  function handleDiagnose(e) {
+    e.preventDefault();
+
+    const q1 = document.querySelector('input[name="q1"]:checked').value;
+    const q2 = document.querySelector('input[name="q2"]:checked').value;
+    const q3 = document.querySelector('input[name="q3"]:checked').value;
+    const q4Checked = document.querySelectorAll('input[name="q4"]:checked').length > 0;
+    const q5 = document.querySelector('input[name="q5"]:checked')?.value;
+
+    const resultSection = document.getElementById('result-section');
+    const resultCard = document.getElementById('result-card');
+    const resultTitle = document.getElementById('result-title');
+    const resultDesc = document.getElementById('result-desc');
+    const metaTable = document.getElementById('meta-table');
+    const metaNotice = document.getElementById('meta-notice');
+    const metaPeriod = document.getElementById('meta-period');
+
+    // 리셋 스타일 클래스
+    resultCard.className = 'result-card';
+    metaTable.classList.remove('hidden');
+
+    // 1. 결격 사유 체크 (질문2 '예' 또는 질문3 '예')
+    if (q2 === 'yes' || q3 === 'yes') {
+      resultCard.classList.add('danger');
+      resultTitle.textContent = '연장 신청 전 확인이 필요합니다 (연장 대상 제외 가능성)';
+      
+      let reasons = [];
+      if (q2 === 'yes') reasons.push('부정당업자 입찰참가자격 제한 처분 진행');
+      if (q3 === 'yes') reasons.push('적용 기술의 유효성·혁신성 상실');
+
+      resultDesc.innerHTML = `현재 확인된 사유(<strong>${reasons.join(', ')}</strong>)로 인해 심의 이전 또는 심의 과정에서 연장 대상에서 제외될 가능성이 높습니다.<br><br>` +
+        `지정기간 연장은 법령 및 공고상 결격사유가 없어야 가능합니다. 정확한 법적 효력 판정 및 소명 가능 여부는 공고문을 재확인하시고, 중소기업기술정보진흥원(TIPA) 성과확산실에 문의하여 사전 확인을 거치시기 바랍니다.`;
+      
+      metaNotice.textContent = q1 === 'A' ? '중소벤처기업부 제2026-566호 (1차)' : '중소벤처기업부 제2026-567호 (2차)';
+      metaPeriod.textContent = '심의 대상 제외 사유 점검 필요';
+    } 
+    // 2. 1차 연장 대상 (Q1 == 'A')
+    else if (q1 === 'A') {
+      metaNotice.textContent = '중소벤처기업부 제2026-566호 (1차 연장 공고)';
+      metaPeriod.textContent = '1년 (원칙)';
+
+      if (q4Checked) {
+        resultCard.classList.add('success');
+        resultTitle.textContent = '1차 연장 신청이 가능합니다';
+        resultDesc.innerHTML = `기본 지정기간 3년 만료 예정 기업 중 실적 요건(공공조달 매출, 미납품 계약, 시상·표창 중 1개 이상)을 만족하므로 1차 연장 신청 대상에 부합합니다.<br><br>` +
+          `접수 마감 기한인 <strong>2026년 10월 28일</strong>까지 중소기업기술개발사업 종합관리시스템(SMTECH)을 통해 신청서 및 증빙자료를 접수하시기 바랍니다.`;
+      } else {
+        resultCard.classList.add('warning');
+        resultTitle.textContent = '1차 요건 보완이 필요합니다';
+        resultDesc.innerHTML = `현재 선택된 실적 요건이 없습니다. 1차 연장 신청을 위해서는 지정기간 내 공공조달 매출 실적이 있거나, <strong>매출 실적이 아직 발생하지 않았더라도 매출계약이 체결되어 미납품 상태</strong>인 경우, 또는 <strong>경진대회 입상 및 중앙관서 표창</strong>이 있는 경우 신청 대상이 될 수 있습니다.<br><br>` +
+          `계약 체결 내역이나 표창 실적 증빙이 가능한지 확인 후 보완하여 접수하시기 바랍니다.`;
+      }
+    } 
+    // 3. 2차 연장 대상 (Q1 == 'B')
+    else if (q1 === 'B') {
+      metaNotice.textContent = '중소벤처기업부 제2026-567호 (2차 연장 공고)';
+      metaPeriod.textContent = '2년 (원칙) — 최장 6년(기본 3년+1차 1년+2차 2년) 유지 가능';
+
+      if (!q4Checked) {
+        resultCard.classList.add('warning');
+        resultTitle.textContent = '1차 요건부터 점검이 필요합니다';
+        resultDesc.innerHTML = `2차 연장 신청을 위해서는 기본적으로 1차 연장 시 요구되는 실적 요건(매출 실적, 계약 체결, 또는 중앙관서 표창 등)을 갖추고 있어야 합니다.<br><br>` +
+          `실적 요건 증빙 자료를 확보한 후 2차 심의 요건(유사기술 부재 및 기술 탁월성)을 준비하시기 바랍니다.`;
+      } else if (q5 === 'yes') {
+        resultCard.classList.add('success');
+        resultTitle.textContent = '2차 연장 신청이 가능합니다';
+        resultDesc.innerHTML = `실적 요건을 구비하였으며 기술 탁월성에 대한 입증 가능성이 인정됩니다. 2차 연장 승인 시 연장 기간은 <strong>원칙적으로 2년</strong>이며, <strong>기본 3년 + 1차 1년 + 2차 2년으로 최장 6년</strong>까지 혁신제품 지정 효력을 유지할 수 있습니다.<br><br>` +
+          `심의위원회 대상 기술 차별성 및 우수성 소명 자료를 충실히 준비하여 <strong>2026년 10월 28일</strong>까지 SMTECH로 접수하시기 바랍니다.`;
+      } else {
+        resultCard.classList.add('warning');
+        resultTitle.textContent = '2차는 혁신성 인정이 관건입니다';
+        resultDesc.innerHTML = `실적 요건은 충족하였으나, 2차 연장은 단순 실적 외에 <strong>'적용 기술과 유사한 기술이 없거나 기술이 탁월하다고 위원회가 인정하는 경우'</strong>에 한해 승인됩니다.<br><br>` +
+          `시장에 진입한 경쟁 유사기술 대비 본 제품만의 비교우위, 기술적 독창성 및 고도화 내용을 입증할 수 있는 차별성 소명 자료 준비에 집중하시기 바랍니다.`;
+      }
+    }
+
+    resultSection.classList.remove('hidden');
+    resultSection.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
