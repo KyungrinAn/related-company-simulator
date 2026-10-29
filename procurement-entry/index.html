@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공공조달시장 진입 준비도 자가진단 — 첫 입찰 전 7가지 점검</title>
+<style>
+:root{--primary:#1e40af;--primary-light:#eff6ff;--success:#047857;--success-light:#ecfdf5;--warning:#b45309;--warning-light:#fffbeb;--danger:#b91c1c;--danger-light:#fef2f2;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-600:#4b5563;--gray-700:#374151;--gray-900:#111827;--border-radius:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6;color:var(--gray-900);background:var(--gray-50);padding:16px}
+.container{max-width:720px;margin:0 auto;background:#fff;padding:24px;border-radius:var(--border-radius);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+header{margin-bottom:24px;text-align:center}
+h1{font-size:1.35rem;font-weight:700;margin-bottom:8px;line-height:1.4}
+.subtitle{font-size:.9rem;color:var(--gray-600);margin-bottom:16px}
+.step-diagram{display:flex;align-items:center;justify-content:space-between;background:var(--primary-light);border:1px solid #bfdbfe;border-radius:var(--border-radius);padding:12px 16px;margin-bottom:24px;font-size:.85rem;font-weight:600}
+.step-box{flex:1;text-align:center;background:#fff;padding:8px 4px;border-radius:6px;border:1px solid #dbeafe;color:var(--primary)}
+.step-arrow{margin:0 6px;color:var(--primary);font-weight:bold}
+.form-group{margin-bottom:20px;padding:16px;border:1px solid var(--gray-200);border-radius:var(--border-radius)}
+.question-title{font-size:.95rem;font-weight:600;margin-bottom:12px;display:flex;align-items:flex-start;gap:6px}
+.badge-q{background:var(--primary);color:#fff;font-size:.75rem;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.options-group{display:flex;flex-direction:column;gap:8px}
+.custom-control{display:flex;align-items:flex-start;padding:8px 10px;border:1px solid var(--gray-200);border-radius:6px;cursor:pointer;font-size:.9rem}
+.custom-control:hover{background:var(--gray-50)}
+.custom-control input{margin-top:4px;margin-right:10px;cursor:pointer}
+.hint-text{font-size:.8rem;color:var(--gray-600);margin-top:4px}
+.hidden{display:none!important}
+.btn-submit{width:100%;background:var(--primary);color:#fff;border:none;padding:14px;font-size:1rem;font-weight:600;border-radius:var(--border-radius);cursor:pointer;margin-top:10px;margin-bottom:24px}
+.btn-submit:hover{background:#1d4ed8}
+#result-section{margin-top:24px;padding-top:24px;border-top:2px dashed var(--gray-200)}
+.result-card{padding:20px;border-radius:var(--border-radius);border:1px solid transparent;margin-bottom:20px}
+.result-card.success{background:var(--success-light);border-color:#a7f3d0;color:#065f46}
+.result-card.warning{background:var(--warning-light);border-color:#fde68a;color:#92400e}
+.result-card.danger{background:var(--danger-light);border-color:#fecaca;color:#991b1b}
+.result-title{font-size:1.15rem;font-weight:700;margin-bottom:12px}
+.result-desc{font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.meta-table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;border-radius:6px;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+.meta-table th,.meta-table td{padding:8px 12px;font-size:.85rem;border-bottom:1px solid var(--gray-100);text-align:left}
+.meta-table th{background:rgba(0,0,0,.02);color:var(--gray-700)}
+.disclaimer{font-size:.78rem;color:var(--gray-600);line-height:1.5;background:var(--gray-100);padding:12px;border-radius:6px;margin-top:16px}
+footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;padding-top:16px;text-align:justify}
+.blog-footer{margin-top:24px;padding:20px;border:1px solid var(--gray-200);border-radius:12px;text-align:center}
+.blog-btn{display:inline-block;background:#03c75a;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:1rem;margin-bottom:10px}
+.blog-btn:hover{background:#02b350}
+.blog-text-link{display:block;color:var(--primary);text-decoration:none;font-size:.95rem;font-weight:600}
+.compare-heading{font-size:1.1rem;margin:30px 0 6px}
+.compare-sub{font-size:.88rem;color:var(--gray-600);margin:0 0 6px}
+.compare-table thead th{background:var(--primary-light);color:var(--primary);text-align:center}
+.verdict-heading{font-size:1rem;margin:18px 0 4px}
+.v-badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.v-ok{background:var(--success-light);color:var(--success)}
+.v-no{background:var(--danger-light);color:var(--danger)}
+.v-warn{background:var(--warning-light);color:var(--warning)}
+.v-info{background:var(--primary-light);color:var(--primary)}
+@media(max-width:480px){body{padding:8px}.container{padding:16px}.step-diagram{flex-direction:column;gap:6px}.step-arrow{transform:rotate(90deg);margin:2px 0}.step-box{width:100%}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>공공조달시장 진입 준비도 자가진단</h1>
+<p class="subtitle">경영지도사 안경린의 중소기업 스케일업 — 첫 입찰 전 7가지 점검</p>
+<div class="step-diagram">
+<div class="step-box">1단계<br><strong>자격 확인</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">2단계<br><strong>참여 구조</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">3단계<br><strong>방식 선택</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">4단계<br><strong>입찰 점검</strong></div>
+</div>
+<p style="font-size:.8rem;color:var(--gray-600)">※ 이 진단은 참고용입니다. 세부 요건은 공고문과 공식 안내로 반드시 대조하세요.</p>
+</header>
+
+<h2 class="compare-heading">판매 방식 한눈에 비교</h2>
+<p class="compare-sub">진단 전에 방식별 차이를 확인하세요. 세부 조건(대상·금액·절차)은 공고문과 공식 안내에 따라 다릅니다.</p>
+<table class="meta-table compare-table">
+<thead><tr><th>구분</th><th>경쟁입찰</th><th>수의계약</th><th>종합쇼핑몰·단가계약</th></tr></thead>
+<tbody>
+<tr><th>선정 방식</th><td>여러 기업이 조건을 겨뤄 선정</td><td>일정 조건을 충족할 때 발주 기관과 직접 계약</td><td>등록된 제품·가격을 기준으로 공공기관이 구매</td></tr>
+<tr><th>준비 포인트</th><td>가격·기술·납품 조건 종합 준비</td><td>대상 조건과 계약 근거 확인</td><td>제품·가격 등록과 유지 관리</td></tr>
+<tr><th>주의점</th><td>공고별 평가 기준을 먼저 읽을 것</td><td>대상 여부를 추측하지 말 것</td><td>등록 정보가 최신인지 확인할 것</td></tr>
+</tbody>
+</table>
+
+<form id="diagForm" onsubmit="handleDiagnose(event)">
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 1</span><span>중소기업확인서를 보유하고 있고, 유효기간이 남아 있습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q1" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q1" value="no"><div>아니오 (없거나 만료됨)</div></label>
+<label class="custom-control"><input type="radio" name="q1" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 2</span><span>직접생산확인 대상 제품이라면, 증명서의 세부품명이 입찰 품목과 일치합니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q2" value="yes" required><div>예 (일치 확인됨)</div></label>
+<label class="custom-control"><input type="radio" name="q2" value="no"><div>아니오 (불일치 또는 증명서 없음)</div></label>
+<label class="custom-control"><input type="radio" name="q2" value="unknown"><div>잘 모르겠음</div></label>
+<label class="custom-control"><input type="radio" name="q2" value="na"><div>해당 없음 (제조업이 아니거나 직접생산 대상 아님)</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 3</span><span>나라장터 등록을 마쳤습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q3" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q3" value="no"><div>아니오</div></label>
+<label class="custom-control"><input type="radio" name="q3" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 4</span><span>관심 품목·발주 기관·납품 조건을 정리한 공고 선별 기준이 있습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q4" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q4" value="no"><div>아니오</div></label>
+<label class="custom-control"><input type="radio" name="q4" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 5</span><span>경쟁·수의·쇼핑몰 중 내 제품에 맞는 판매 방식을 정했습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q5" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q5" value="no"><div>아니오</div></label>
+<label class="custom-control"><input type="radio" name="q5" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 6</span><span>납품 수량·납기·장소 등 납품 역량을 확인했습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q6" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q6" value="no"><div>아니오</div></label>
+<label class="custom-control"><input type="radio" name="q6" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 7</span><span>공고별 제출 서류 목록을 대조할 준비가 됐습니까?</span></div>
+<div class="options-group">
+<label class="custom-control"><input type="radio" name="q7" value="yes" required><div>예</div></label>
+<label class="custom-control"><input type="radio" name="q7" value="no"><div>아니오</div></label>
+<label class="custom-control"><input type="radio" name="q7" value="unknown"><div>잘 모르겠음</div></label>
+</div></div>
+
+<button type="submit" class="btn-submit">자가진단 결과 확인하기</button>
+</form>
+
+<div id="result-section" class="hidden">
+<div id="result-card" class="result-card">
+<h2 id="result-title" class="result-title"></h2>
+<div id="result-desc" class="result-desc"></div>
+<h3 class="verdict-heading">질문별 판정 내역</h3>
+<table class="meta-table verdict-table">
+<thead><tr><th>점검 항목</th><th>내 답변</th><th>판정</th><th>사유</th></tr></thead>
+<tbody id="verdict-body"></tbody>
+</table>
+<table class="meta-table"><tbody>
+<tr><th>다음 단계</th><td id="meta-next">-</td></tr>
+<tr><th>근거 안내</th><td>조달청 나라장터·공공구매종합정보망 등 공식 안내, 공고문 대조 필요</td></tr>
+</tbody></table>
+</div>
+<div class="disclaimer"><strong>[참고용 자가진단 면책 안내]</strong><br>
+본 도구는 공공조달시장 진입 절차를 일반 정보로 정리한 참고용 자가진단입니다. 세부 요건·대상·절차는 공고문과 공식 안내에서 확인하시고, 최종 참여 가능 여부는 발주 기관과 공식 안내를 기준으로 판단하시기 바랍니다.</div>
+</div>
+
+<footer class="disclaimer disclaimer-footer">본 자가진단 서비스는 특정 업체의 유료 상담 유도나 개인정보 수집 없이 순수 제도 안내 및 준비도 점검을 목적으로 운영됩니다.</footer>
+
+<div class="blog-footer">
+<a href="https://blog.naver.com/lge130287" target="_blank" rel="noopener noreferrer" class="blog-btn">자세한 해설: 블로그 글 보기</a>
+<a href="https://blog.naver.com/lge130287" target="_blank" rel="noopener noreferrer" class="blog-text-link">경영지도사 안경린의 중소기업 스케일업</a>
+</div>
+</div>
+
+<script>
+function handleDiagnose(e){
+e.preventDefault();
+const get=n=>document.querySelector('input[name="'+n+'"]:checked').value;
+const ans={q1:get('q1'),q2:get('q2'),q3:get('q3'),q4:get('q4'),q5:get('q5'),q6:get('q6'),q7:get('q7')};
+const badge=(cls,txt)=>'<span class="v-badge '+cls+'">'+txt+'</span>';
+const ansText={yes:'예',no:'아니오',unknown:'잘 모르겠음',na:'해당 없음'};
+const items=[
+['중소기업확인서 보유·유효','q1','확인서 보유·유효가 확인됐습니다','확인서 없거나 만료됐다면 기본 자격부터 정리하세요','확인서 발급·유효기간을 먼저 확인하세요',null],
+['직접생산확인 세부품명 일치','q2','세부품명 일치 확인됐습니다','증명서·세부품명 불일치면 입찰 전 정정이 필요합니다','대상 여부와 증명서를 먼저 확인하세요','직접생산 대상이 아니므로 해당 항목은 제외합니다'],
+['나라장터 등록','q3','나라장터 등록 완료','등록부터 진행하세요','등록 여부를 먼저 확인하세요',null],
+['공고 선별 기준','q4','선별 기준이 정리됐습니다','공고 선별 기준을 먼저 만드세요','관심 품목·기관·납품 조건을 정리하세요',null],
+['판매 방식 선택','q5','제품에 맞는 방식을 정했습니다','방식별 조건을 대조해 방식을 먼저 정하세요','방식별 조건을 대조하세요',null],
+['납품 역량 확인','q6','납품 역량이 확인됐습니다','수량·납기·장소를 감당할 수 있는지 보완하세요','수량·납기·장소를 확인하세요',null],
+['제출 서류 대조 준비','q7','서류 대조 준비가 됐습니다','공고별 요구 서류 목록을 정리하세요','공고별 요구 서류를 확인하세요',null],
+];
+const rows=items.map(([title,key,ok,no,unk,na])=>{
+const v=ans[key];
+if(v==='yes') return [title,ansText[v],badge('v-ok','충족'),ok];
+if(v==='na') return [title,ansText[v],badge('v-info','해당없음'),na];
+if(v==='no') return [title,ansText[v],badge('v-no','보완 필요'),no];
+return [title,ansText[v],badge('v-warn','확인 필요'),unk];
+});
+document.getElementById('verdict-body').innerHTML=rows.map(r=>'<tr><th>'+r[0]+'</th><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>').join('');
+const card=document.getElementById('result-card');
+const title=document.getElementById('result-title');
+const desc=document.getElementById('result-desc');
+const next=document.getElementById('meta-next');
+card.className='result-card';
+const criticalNo=['q1','q2','q3'].some(k=>ans[k]==='no');
+const anyIssue=Object.values(ans).some(v=>v==='no'||v==='unknown');
+if(criticalNo){
+card.classList.add('danger');
+title.textContent='필수 요건 보완 필요 — 아직 첫 입찰 전 단계입니다';
+desc.innerHTML='중소기업확인서, 직접생산확인, 나라장터 등록 중 보완이 필요한 항목이 있습니다. 이 항목들은 입찰 참여의 기본 조건에 해당하므로, 먼저 정리한 뒤 공고를 선별하는 것이 순서입니다.<br><br>아래 판정 내역에서 ‘보완 필요’로 표시된 항목부터 확인하세요.';
+next.textContent='보완 항목 정리 → 공식 안내·공고문 대조 → 다시 진단';
+} else if(anyIssue){
+card.classList.add('warning');
+title.textContent='점검 후 도전 — 몇 가지 확인이 남았습니다';
+desc.innerHTML='필수 자격·등록에는 큰 결격이 보이지 않지만, 아직 확인이 필요한 항목이 있습니다. 아래 판정 내역에서 ‘보완 필요’ 또는 ‘확인 필요’ 항목을 정리하면 첫 입찰 도전 준비가 더 단단해집니다.';
+next.textContent='확인 항목 정리 → 공고 선별 기준 확정 → 첫 입찰 도전';
+} else {
+card.classList.add('success');
+title.textContent='입찰 준비 완료 — 첫 입찰에 도전할 수 있는 상태입니다';
+desc.innerHTML='7가지 점검 항목이 모두 충족되거나 해당 없음으로 정리됐습니다. 이제 납품 가능한 공고부터 선별해, 공고별 제출 서류와 납품 조건을 다시 한 번 대조한 뒤 입찰에 도전하세요.<br><br>공고별 세부 조건은 매번 다를 수 있으니, 입찰 전 공고문 대조는 습관으로 유지하세요.';
+next.textContent='납품 가능한 공고 선별 → 공고문 대조 → 입찰 도전';
+}
+const sec=document.getElementById('result-section');
+sec.classList.remove('hidden');
+sec.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
