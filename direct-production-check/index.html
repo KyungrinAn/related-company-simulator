@@ -12,8 +12,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica N
 header{margin-bottom:24px;text-align:center}
 h1{font-size:1.35rem;font-weight:700;margin-bottom:8px;line-height:1.4}
 .subtitle{font-size:.9rem;color:var(--gray-600);margin-bottom:16px}
-.step-diagram{display:flex;align-items:center;justify-content:space-between;background:var(--primary-light);border:1px solid #bfdbfe;border-radius:var(--border-radius);padding:12px 16px;margin-bottom:24px;font-size:.85rem;font-weight:600}
-.step-box{flex:1;text-align:center;background:#fff;padding:8px 4px;border-radius:6px;border:1px solid #dbeafe;color:var(--primary)}
+.step-diagram{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;background:var(--primary-light);border:1px solid #bfdbfe;border-radius:var(--border-radius);padding:12px 16px;margin-bottom:24px;font-size:.78rem;font-weight:600}
+.step-box{flex:1 1 0;min-width:0;text-align:center;background:#fff;padding:8px 4px;border-radius:6px;border:1px solid #dbeafe;color:var(--primary)}
 .step-arrow{margin:0 6px;color:var(--primary);font-weight:bold}
 .form-group{margin-bottom:20px;padding:16px;border:1px solid var(--gray-200);border-radius:var(--border-radius)}
 .question-title{font-size:.95rem;font-weight:600;margin-bottom:12px;display:flex;align-items:flex-start;gap:6px}
@@ -61,10 +61,12 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <p class="subtitle">경영지도사 안경린의 중소기업 스케일업 — 현장조사 전 7가지 점검</p>
 <p style="font-size:.85rem;color:var(--gray-700);background:var(--primary-light);border:1px solid #bfdbfe;border-radius:6px;padding:10px 12px;margin-bottom:16px;text-align:left">적용 제도: 중소기업제품 공공구매종합정보망(SMPP) 중소기업자간 경쟁제품 직접생산확인 — 「중소기업자간 경쟁제품 직접생산 확인기준」 기준입니다. 조달청 「제조물품 직접생산확인 기준」과는 다른 제도입니다.</p>
 <div class="step-diagram">
-<div class="step-box">1단계<br><strong>신청·배정</strong></div><div class="step-arrow">▶</div>
-<div class="step-box">2단계<br><strong>현장조사</strong></div><div class="step-arrow">▶</div>
-<div class="step-box">3단계<br><strong>검토·승인</strong></div><div class="step-arrow">▶</div>
-<div class="step-box">4단계<br><strong>증명서 발급</strong></div>
+<div class="step-box">1단계<br><strong>신청·서류 제출</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">2단계<br><strong>조사원 배정</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">3단계<br><strong>해당 시 수수료 납부</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">4단계<br><strong>해당 시 현장조사</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">5단계<br><strong>검토·승인</strong></div><div class="step-arrow">▶</div>
+<div class="step-box">6단계<br><strong>발급</strong></div>
 </div>
 <p style="font-size:.8rem;color:var(--gray-600)">※ 이 진단은 참고용입니다. 세부 요건은 공고문과 공식 안내로 반드시 대조하세요.</p>
 </header>
@@ -72,23 +74,24 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <p class="compare-sub" style="margin-top:12px">설비 보유 형태: 자가 보유와 임차 보유 모두 인정될 수 있습니다. 다만 경쟁제품별 세부기준에서 임차 보유를 인정하지 않는 경우는 제외하며, 임차한 경우에는 임차계약서·임차료 지급내역 등 증빙이 필요합니다.</p>
 
 <form id="diagForm" onsubmit="handleDiagnose(event)">
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 1</span><span>사업자등록증명원(조사일 기준 최근 3개월 이내), 공장등록증명서, 건축물대장을 갖췄습니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 1</span><span>신청 품목과 사업장 조건에 맞는 생산공장 증빙을 확인했습니까?</span></div>
 <div class="options-group">
-<label class="custom-control"><input type="radio" name="q1" value="yes" required><div>예 (갖췄음)</div></label>
+<label class="custom-control"><input type="radio" name="q1" value="yes" required><div>예 (확인했음)</div></label>
 <label class="custom-control"><input type="radio" name="q1" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q1" value="unknown"><div>잘 모르겠음</div></label>
-</div></div>
+</div><p class="hint-text">건축물대장은 공장면적 500㎡ 미만 소기업이 공장을 미등록한 경우 등 해당 예외일 때만 확인합니다.</p></div>
 <div class="form-group"><div class="question-title"><span class="badge-q">질문 2</span><span>품명별 필수 생산설비를 보유하고 있고, 구매·설치 증빙(계약서·세금계산서·감가상각대장 등)을 갖췄습니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q2" value="yes" required><div>예 (갖췄음)</div></label>
 <label class="custom-control"><input type="radio" name="q2" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q2" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 3</span><span>상시근로자가 생산설비를 시연해 실제 작동 여부를 보여줄 수 있습니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 3</span><span>요청 시 상시근로자가 필수 설비의 정상 작동을 시연할 수 있습니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q3" value="yes" required><div>예</div></label>
 <label class="custom-control"><input type="radio" name="q3" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q3" value="unknown"><div>잘 모르겠음</div></label>
+<label class="custom-control"><input type="radio" name="q3" value="na"><div>해당 없음 (현장조사 생략 대상 등)</div></label>
 </div></div>
 <div class="form-group"><div class="question-title"><span class="badge-q">질문 4</span><span>신청 품목의 품목별 기준에서 정한 생산인력 요건을 충족하고, 4대 보험 가입자 명부로 확인됩니까?</span></div>
 <div class="options-group">
@@ -102,11 +105,12 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <label class="custom-control"><input type="radio" name="q5" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q5" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 6</span><span>해당 품목 기준에서 요구하는 기간의 전기 사용실적과 원부자재 구입내역을 갖췄습니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 6</span><span>신청 품목의 세부기준에서 요구하는 기타 증빙(전기·원부자재·인증 등)을 갖췄습니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q6" value="yes" required><div>예 (갖췄음)</div></label>
 <label class="custom-control"><input type="radio" name="q6" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q6" value="unknown"><div>잘 모르겠음</div></label>
+<label class="custom-control"><input type="radio" name="q6" value="na"><div>해당 없음 (해당 품목 기준에서 요구하지 않음)</div></label>
 </div></div>
 <div class="form-group"><div class="question-title"><span class="badge-q">질문 7</span><span>신청할 세부품명이 공식 품목별 기준과 일치합니까?</span></div>
 <div class="options-group">
@@ -151,12 +155,12 @@ const ans={q1:get('q1'),q2:get('q2'),q3:get('q3'),q4:get('q4'),q5:get('q5'),q6:g
 const badge=(cls,txt)=>'<span class="v-badge '+cls+'">'+txt+'</span>';
 const ansText={yes:'예',no:'아니오',unknown:'잘 모르겠음',na:'해당 없음'};
 const items=[
-['공장 서류 보유','q1','사업자등록증명원·공장등록증명서·건축물대장이 갖춰졌습니다','서류가 없거나 오래됐다면 조사 전 최신 발급분으로 정리하세요','서류 보유 여부와 발급일을 먼저 확인하세요',null],
+['공장 서류 보유','q1','신청 품목과 사업장 조건에 맞는 생산공장 증빙이 확인됐습니다','사업장 조건에 맞는 생산공장 증빙이 없으면 조사 전 정리하세요','사업장 조건에 맞는 증빙 종류와 발급일을 먼저 확인하세요',null],
 ['생산시설 보유·증빙','q2','필수 설비 보유와 증빙이 확인됐습니다','필수 설비와 증빙이 없으면 현장조사에서 확인이 어렵습니다','품명별 필수 설비와 증빙을 먼저 확인하세요',null],
-['설비 가동 시연','q3','설비 시연이 가능합니다','가동되지 않는 설비는 직접생산 능력 확인이 어렵습니다','설비 가동 상태를 먼저 점검하세요',null],
+['설비 가동 시연','q3','요청 시 필수 설비의 정상 작동 시연이 가능합니다','요청 시 시연이 어려우면 품목별 기준에서 시연이 필수인지 먼저 확인하세요','요청 시 시연 가능 여부와 품목별 기준을 먼저 확인하세요','현장조사 생략 대상 등으로 시연이 해당되지 않습니다'],
 ['생산인력 확인','q4','품목별 기준의 생산인력 요건과 4대 보험 명부가 확인됐습니다','품목별 기준의 생산인력 요건에 안 맞으면 보완이 필요합니다','품목별 기준의 생산인력 요건과 4대 보험 명부를 확인하세요',null],
 ['생산공정 확인','q5','제조공정표·작업표준과 필수 공정 수행이 확인됐습니다','공정도와 필수 공정 수행 여부를 정리하세요','제조공정표·작업표준을 먼저 확인하세요',null],
-['전기·원부자재 증빙','q6','전기 사용실적과 원부자재 구입내역이 갖춰졌습니다','해당 품목 기준에서 요구하는 기간의 전기 사용실적과 구입내역을 정리하세요','전기 사용실적과 구입내역을 확인하세요',null],
+['기타 증빙','q6','신청 품목의 세부기준에서 요구하는 기타 증빙이 갖춰졌습니다','품목별 세부기준에서 요구하는 기타 증빙을 정리하세요','품목별 세부기준에서 요구하는 기타 증빙을 확인하세요','해당 품목 기준에서 요구하는 기타 증빙이 없습니다'],
 ['세부품명·규격 일치','q7','신청할 세부품명이 공식 품목별 기준과 일치하는 것이 확인됐습니다','신청할 세부품명이 품목별 기준과 맞지 않으면 조사 전 정정이 필요합니다','신청할 세부품명과 공식 품목별 기준을 먼저 확인하세요',null],
 ];
 const rows=items.map(([title,key,ok,no,unk,na])=>{
@@ -172,23 +176,23 @@ const title=document.getElementById('result-title');
 const desc=document.getElementById('result-desc');
 const next=document.getElementById('meta-next');
 card.className='result-card';
-const criticalNo=['q2','q3','q7'].some(k=>ans[k]==='no');
-const anyIssue=Object.values(ans).some(v=>v==='no'||v==='unknown');
-if(criticalNo){
+const anyNo=Object.values(ans).some(v=>v==='no');
+const anyUnknown=Object.values(ans).some(v=>v==='unknown');
+if(anyNo){
 card.classList.add('danger');
 title.textContent='필수 요건 보완 필요 — 아직 현장조사 전 단계입니다';
-desc.innerHTML='생산시설, 설비 가동 시연, 세부품명·규격 중 보완이 필요한 항목이 있습니다. 이 항목들은 현장조사에서 직접 확인되는 부분이므로, 먼저 정리한 뒤 조사에 임하는 것이 순서입니다.<br><br>아래 판정 내역에서 ‘보완 필요’로 표시된 항목부터 확인하세요.';
+desc.innerHTML='‘아니오’로 답한 항목은 해당 품목의 필수 요건에 해당할 수 있습니다. 먼저 정리한 뒤 조사에 임하는 것이 순서입니다.<br><br>아래 판정 내역에서 ‘보완 필요’로 표시된 항목부터 확인하세요.';
 next.textContent='보완 항목 정리 → 공식 안내·공고문 대조 → 다시 진단';
-} else if(anyIssue){
+} else if(anyUnknown){
 card.classList.add('warning');
 title.textContent='점검 후 준비 — 몇 가지 확인이 남았습니다';
-desc.innerHTML='핵심 항목에는 큰 결격이 보이지 않지만, 아직 확인이 필요한 항목이 있습니다. 아래 판정 내역에서 ‘보완 필요’ 또는 ‘확인 필요’ 항목을 정리하면 현장조사 준비가 더 단단해집니다.';
+desc.innerHTML='아직 확인이 필요한 항목이 있습니다. 아래 판정 내역에서 ‘확인 필요’ 항목을 정리하면 현장조사 준비가 더 단단해집니다.';
 next.textContent='확인 항목 정리 → 서류·현장 대조 → 현장조사 준비';
 } else {
 card.classList.add('success');
-title.textContent='현장조사 준비 완료 — 조사에 임할 수 있는 상태입니다';
-desc.innerHTML='7가지 점검 항목이 모두 충족되거나 해당 없음으로 정리됐습니다. 이제 서류와 현장이 일치하는지 마지막으로 대조한 뒤 현장조사에 임하세요.<br><br>품목별 세부 기준은 다를 수 있으니, 조사 전 공식 안내 대조는 습관으로 유지하세요.';
-next.textContent='서류·현장 최종 대조 → 현장조사 준비 → 조사 임하기';
+title.textContent='자가점검상 미확인 항목 없음 — 품목별 공식 기준과 현장 증빙 최종 대조 필요';
+desc.innerHTML='7가지 점검에서 미확인 항목이 없습니다. 다만 이것은 자가 응답 기준입니다. 품목별 공식 기준과 현장 증빙을 최종 대조한 뒤에 조사에 임하세요.';
+next.textContent='품목별 공식 기준 최종 대조 → 서류·현장 대조 → 조사 임하기';
 }
 const sec=document.getElementById('result-section');
 sec.classList.remove('hidden');
