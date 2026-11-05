@@ -59,6 +59,7 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <header>
 <h1>직접생산확인 실태조사 대비 자가진단</h1>
 <p class="subtitle">경영지도사 안경린의 중소기업 스케일업 — 현장조사 전 7가지 점검</p>
+<p style="font-size:.85rem;color:var(--gray-700);background:var(--primary-light);border:1px solid #bfdbfe;border-radius:6px;padding:10px 12px;margin-bottom:16px;text-align:left">적용 제도: 중소기업제품 공공구매종합정보망(SMPP) 중소기업자간 경쟁제품 직접생산확인 — 「중소기업자간 경쟁제품 직접생산 확인기준」 기준입니다. 조달청 「제조물품 직접생산확인 기준」과는 다른 제도입니다.</p>
 <div class="step-diagram">
 <div class="step-box">1단계<br><strong>신청·배정</strong></div><div class="step-arrow">▶</div>
 <div class="step-box">2단계<br><strong>현장조사</strong></div><div class="step-arrow">▶</div>
@@ -68,16 +69,6 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <p style="font-size:.8rem;color:var(--gray-600)">※ 이 진단은 참고용입니다. 세부 요건은 공고문과 공식 안내로 반드시 대조하세요.</p>
 </header>
 
-<h2 class="compare-heading">현장조사와 간편조사 한눈에 비교</h2>
-<p class="compare-sub">진단 전에 조사 방식 차이를 확인하세요. 세부 조건은 공식 안내에 따라 다릅니다.</p>
-<table class="meta-table compare-table">
-<thead><tr><th>구분</th><th>현장조사 (원칙)</th><th>간편조사</th></tr></thead>
-<tbody>
-<tr><th>대상</th><td>조사대상기간(최근 3년 이내) 납품실적이 있는 경우</td><td>조사대상기간 동안 세부품명 기준 납품실적이 없는 경우</td></tr>
-<tr><th>확인 방법</th><td>서류 점검 + 생산현장을 직접 방문하여 조사</td><td>현장 방문 없이 서류(필요 시 사진 첨부)를 제출받아 확인</td></tr>
-<tr><th>확인 내용</th><td>공장·설비·인력·공정·기타 증빙을 현장 실물과 대조</td><td>제출 서류로 직접생산 여부를 확인</td></tr>
-</tbody>
-</table>
 <p class="compare-sub" style="margin-top:12px">설비 보유 형태: 자가 보유와 임차 보유 모두 인정될 수 있습니다. 다만 경쟁제품별 세부기준에서 임차 보유를 인정하지 않는 경우는 제외하며, 임차한 경우에는 임차계약서·임차료 지급내역 등 증빙이 필요합니다.</p>
 
 <form id="diagForm" onsubmit="handleDiagnose(event)">
@@ -99,7 +90,7 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <label class="custom-control"><input type="radio" name="q3" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q3" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 4</span><span>상시근로자(대표자 제외)가 최소 1명 이상이고, 4대 보험 가입자 명부로 확인됩니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 4</span><span>신청 품목의 품목별 기준에서 정한 생산인력 요건을 충족하고, 4대 보험 가입자 명부로 확인됩니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q4" value="yes" required><div>예</div></label>
 <label class="custom-control"><input type="radio" name="q4" value="no"><div>아니오</div></label>
@@ -111,16 +102,16 @@ footer.disclaimer-footer{border-top:1px solid var(--gray-200);margin-top:24px;pa
 <label class="custom-control"><input type="radio" name="q5" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q5" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 6</span><span>최근 3개월 전기 사용실적과 원부자재 구입내역을 갖췄습니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 6</span><span>해당 품목 기준에서 요구하는 기간의 전기 사용실적과 원부자재 구입내역을 갖췄습니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q6" value="yes" required><div>예 (갖췄음)</div></label>
 <label class="custom-control"><input type="radio" name="q6" value="no"><div>아니오</div></label>
 <label class="custom-control"><input type="radio" name="q6" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
-<div class="form-group"><div class="question-title"><span class="badge-q">질문 7</span><span>증명서의 세부품명과 입찰 품목·제품 규격이 일치합니까?</span></div>
+<div class="form-group"><div class="question-title"><span class="badge-q">질문 7</span><span>신청할 세부품명이 공식 품목별 기준과 일치합니까?</span></div>
 <div class="options-group">
 <label class="custom-control"><input type="radio" name="q7" value="yes" required><div>예 (일치 확인됨)</div></label>
-<label class="custom-control"><input type="radio" name="q7" value="no"><div>아니오 (불일치 또는 증명서 없음)</div></label>
+<label class="custom-control"><input type="radio" name="q7" value="no"><div>아니오 (불일치)</div></label>
 <label class="custom-control"><input type="radio" name="q7" value="unknown"><div>잘 모르겠음</div></label>
 </div></div>
 <button type="submit" class="btn-submit">자가진단 결과 확인하기</button>
@@ -163,10 +154,10 @@ const items=[
 ['공장 서류 보유','q1','사업자등록증명원·공장등록증명서·건축물대장이 갖춰졌습니다','서류가 없거나 오래됐다면 조사 전 최신 발급분으로 정리하세요','서류 보유 여부와 발급일을 먼저 확인하세요',null],
 ['생산시설 보유·증빙','q2','필수 설비 보유와 증빙이 확인됐습니다','필수 설비와 증빙이 없으면 현장조사에서 확인이 어렵습니다','품명별 필수 설비와 증빙을 먼저 확인하세요',null],
 ['설비 가동 시연','q3','설비 시연이 가능합니다','가동되지 않는 설비는 직접생산 능력 확인이 어렵습니다','설비 가동 상태를 먼저 점검하세요',null],
-['생산인력 확인','q4','상시근로자 1명 이상과 4대 보험 명부가 확인됐습니다','인력 기준이 안 맞으면 보완이 필요합니다','상시근로자 수와 4대 보험 명부를 확인하세요',null],
+['생산인력 확인','q4','품목별 기준의 생산인력 요건과 4대 보험 명부가 확인됐습니다','품목별 기준의 생산인력 요건에 안 맞으면 보완이 필요합니다','품목별 기준의 생산인력 요건과 4대 보험 명부를 확인하세요',null],
 ['생산공정 확인','q5','제조공정표·작업표준과 필수 공정 수행이 확인됐습니다','공정도와 필수 공정 수행 여부를 정리하세요','제조공정표·작업표준을 먼저 확인하세요',null],
-['전기·원부자재 증빙','q6','전기 사용실적과 원부자재 구입내역이 갖춰졌습니다','최근 3개월 전기 사용실적과 구입내역을 정리하세요','전기 사용실적과 구입내역을 확인하세요',null],
-['세부품명·규격 일치','q7','세부품명·규격 일치 확인됐습니다','증명서·세부품명 불일치면 조사 전 정정이 필요합니다','증명서 세부품명과 입찰 품목을 먼저 확인하세요',null],
+['전기·원부자재 증빙','q6','전기 사용실적과 원부자재 구입내역이 갖춰졌습니다','해당 품목 기준에서 요구하는 기간의 전기 사용실적과 구입내역을 정리하세요','전기 사용실적과 구입내역을 확인하세요',null],
+['세부품명·규격 일치','q7','신청할 세부품명이 공식 품목별 기준과 일치하는 것이 확인됐습니다','신청할 세부품명이 품목별 기준과 맞지 않으면 조사 전 정정이 필요합니다','신청할 세부품명과 공식 품목별 기준을 먼저 확인하세요',null],
 ];
 const rows=items.map(([title,key,ok,no,unk,na])=>{
 const v=ans[key];
