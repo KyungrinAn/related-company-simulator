@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이노비즈·메인비즈 신청 가능 여부 자가진단</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #eff6ff;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --warning: #d97706;
+            --warning-bg: #fffbeb;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        body { background-color: var(--gray-100); color: var(--gray-950, #1f2937); line-height: 1.5; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow: hidden; }
+        header { background: var(--primary); color: #ffffff; padding: 30px 20px; text-align: center; }
+        header h1 { font-size: 1.5rem; margin-bottom: 10px; }
+        header .subtitle { font-size: 1.1rem; opacity: 0.9; margin-bottom: 5px; }
+        header .oneliner { font-size: 0.9rem; opacity: 0.8; }
+        
+        .section { padding: 20px; border-bottom: 1px solid var(--gray-200); }
+        .notice-box { background: var(--primary-light); border-left: 4px solid var(--primary); padding: 15px; border-radius: 4px; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        /* 4단계 흐름 */
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .step-card { background: var(--gray-100); padding: 12px; border-radius: 6px; font-size: 0.85rem; text-align: center; border: 1px solid var(--gray-200); }
+        .step-card strong { display: block; color: var(--primary); margin-bottom: 4px; }
+        .step-footer-text { font-size: 0.8rem; color: var(--gray-700); text-align: center; margin-top: 10px; }
+
+        /* 비교 도표 */
+        h2 { font-size: 1.2rem; margin-bottom: 15px; color: var(--gray-900); }
+        .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 10px; }
+        .comparison-table th, .comparison-table td { border: 1px solid var(--gray-200); padding: 10px; text-align: left; }
+        .comparison-table th { background: var(--gray-100); color: var(--gray-900); }
+
+        /* 문항 */
+        .question-item { background: var(--gray-100); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .question-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; }
+        .question-hint { font-size: 0.8rem; color: var(--gray-700); margin-bottom: 10px; }
+        .options { display: flex; gap: 15px; font-size: 0.9rem; }
+        .options label { cursor: pointer; display: flex; align-items: center; gap: 5px; }
+
+        .btn-container { text-align: center; margin-top: 20px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 30px; font-size: 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn:hover { opacity: 0.9; }
+
+        /* 결과 화면 */
+        #result-section { display: none; }
+        .result-banner { padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .result-banner.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+        .result-banner.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning); }
+        .result-banner.danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+        .result-banner h3 { font-size: 1.3rem; margin-bottom: 8px; }
+        
+        .result-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 20px; }
+        .result-table th, .result-table td { border: 1px solid var(--gray-200); padding: 8px; text-align: left; }
+        .result-table th { background: var(--gray-100); }
+        
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+        .badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+
+        .meta-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 20px; }
+        .meta-table th, .meta-table td { border: 1px solid var(--gray-200); padding: 6px; }
+        .meta-table th { background: var(--gray-100); width: 30%; }
+
+        .disclaimer { font-size: 0.75rem; color: var(--gray-700); text-align: center; margin-bottom: 20px; padding: 10px; background: var(--gray-100); border-radius: 4px; }
+        
+        .blog-footer { margin-top: 30px; text-align: center; padding-top: 20px; border-top: 1px solid var(--gray-200); }
+        .blog-btn { display: inline-block; background: #03c75a; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; }
+        .blog-link { display: block; font-size: 0.9rem; color: var(--primary); text-decoration: none; font-weight: 600; }
+        .blog-link:hover { text-decoration: underline; }
+
+        .supplement-box { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+        .supplement-box.danger { background: var(--danger-bg); border: 1px solid var(--danger); }
+        .supplement-box.warning { background: var(--warning-bg); border: 1px solid var(--warning); }
+        .supplement-box h4 { margin-bottom: 8px; }
+        .supplement-box ul { margin-left: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>이노비즈·메인비즈 신청 가능 여부 자가진단</h1>
+        <div class="subtitle">경영지도사 안경린의 중소기업 스케일업 — 이노비즈·메인비즈 신청 가능 여부</div>
+        <div class="oneliner">기술이냐 경영이냐, 우리 회사에 맞는 인증부터 확인하세요.</div>
+    </header>
+
+    <!-- 적용 제도 안내 -->
+    <div class="section">
+        <div class="notice-box">
+            <strong>적용 제도 안내:</strong> 이 진단은 「중소기업 기술혁신 촉진법」 기준, 이노비즈 제도 운영규정(중소벤처기업부 고시 제2026-44호, 2026.6.22)과 메인비즈 제도 운영규정(중소벤처기업부 고시 제2026-45호, 2026.6.22 일부개정)을 다룹니다. 이노비즈 신청은 이노비즈넷(www.innobiz.net), 메인비즈 신청은 메인비즈넷(smes.go.kr/mainbiz)에서 합니다. 기준일: 2026-11-13.
+        </div>
+
+        <!-- 절차 그림 -->
+        <div class="steps">
+            <div class="step-card"><strong>1단계</strong>어느 쪽인지 가리기<br>(기술 실적 / 경영 실적)</div>
+            <div class="step-card"><strong>2단계</strong>온라인 자가진단<br>(이노비즈 650점 / 메인비즈 600점)</div>
+            <div class="step-card"><strong>3단계</strong>현장평가<br>(700점 이상, 이노비즈는 B등급 추가)</div>
+            <div class="step-card"><strong>4단계</strong>확인서 발급<br>(유효기간 3년)</div>
+        </div>
+        <div class="step-footer-text">연장 신청은 만료 90일 전부터 만료 후 30일까지, 혜택이 끊기지 않으려면 만료 35일 전까지 신청하세요.</div>
+    </div>
+
+    <!-- 요건·기준 비교 도표 -->
+    <div class="section">
+        <h2>이노비즈와 메인비즈, 무엇이 다른가요</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>이노비즈(기술혁신형)</th>
+                    <th>메인비즈(경영혁신형)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>평가하는 축</td>
+                    <td>기술혁신 역량</td>
+                    <td>경영혁신 역량</td>
+                </tr>
+                <tr>
+                    <td>온라인 자가진단</td>
+                    <td>1,000점 만점에 650점 이상</td>
+                    <td>1,000점 만점에 600점 이상</td>
+                </tr>
+                <tr>
+                    <td>현장평가 합격 기준</td>
+                    <td>기술혁신시스템 평가 700점 이상 + 기술평가등급 B등급 이상</td>
+                    <td>경영혁신 평가 700점 이상</td>
+                </tr>
+                <tr>
+                    <td>현장평가 기관</td>
+                    <td>기술보증기금</td>
+                    <td>신용보증기금·기술보증기금·한국생산성본부 중 선택</td>
+                </tr>
+                <tr>
+                    <td>유효기간</td>
+                    <td>확인서 발급일로부터 3년</td>
+                    <td>확인서 발급일로부터 3년</td>
+                </tr>
+                <tr>
+                    <td>수수료(신규, 부가세 포함)</td>
+                    <td>77만원</td>
+                    <td>55만원</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 진단 문항 -->
+    <div class="section" id="form-section">
+        <h2>자가진단 문항</h2>
+        
+        <div class="question-item" data-q="1">
+            <div class="question-title">질문 1: 업력이 3년 이상입니까?</div>
+            <div class="question-hint">힌트: 개인기업은 사업자등록증상 사업개시일, 법인기업은 법인등기부상 회사성립일부터 신청일까지로 계산하고, 휴업기간은 제외합니다.</div>
+            <div class="options">
+                <label><input type="radio" name="q1" value="yes"> 예</label>
+                <label><input type="radio" name="q1" value="no"> 아니오</label>
+                <label><input type="radio" name="q1" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="2">
+            <div class="question-title">질문 2: 중소기업기본법상 중소기업에 해당합니까?</div>
+            <div class="question-hint">힌트: 두 인증 모두 중소기업기본법상 중소기업이 대상입니다. 중소기업확인서로 규모를 먼저 확인해 보세요.</div>
+            <div class="options">
+                <label><input type="radio" name="q2" value="yes"> 예</label>
+                <label><input type="radio" name="q2" value="no"> 아니오</label>
+                <label><input type="radio" name="q2" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="3">
+            <div class="question-title">질문 3: 연체·국세체납 등 신용정보 등록, 거래정지, 파산·회생·청산 절차에 해당하지 않습니까?</div>
+            <div class="question-hint">힌트: 해당하면 이노비즈 신청을 할 수 없습니다(운영규정 제3조제2항). 메인비즈도 체납·자본잠식 등 신청 제한 사유가 있으니 공식 안내로 확인하세요.</div>
+            <div class="options">
+                <label><input type="radio" name="q3" value="yes"> 예</label>
+                <label><input type="radio" name="q3" value="no"> 아니오</label>
+                <label><input type="radio" name="q3" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="4">
+            <div class="question-title">질문 4: 기술혁신 실적이 있습니까?</div>
+            <div class="question-hint">힌트: 특허·실용신안 등 지식재산권, 연구개발 투자, 연구소·연구개발전담부서 보유 등이 기술혁신 실적에 해당합니다.</div>
+            <div class="options">
+                <label><input type="radio" name="q4" value="yes"> 예</label>
+                <label><input type="radio" name="q4" value="no"> 아니오</label>
+                <label><input type="radio" name="q4" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="5">
+            <div class="question-title">질문 5: 경영혁신 실적이 있습니까?</div>
+            <div class="question-hint">힌트: 신규 마케팅 기법 도입, 조직·프로세스 개선, 생산성 향상 등 비기술 분야의 경영 개선 실적이 해당합니다.</div>
+            <div class="options">
+                <label><input type="radio" name="q5" value="yes"> 예</label>
+                <label><input type="radio" name="q5" value="no"> 아니오</label>
+                <label><input type="radio" name="q5" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="6">
+            <div class="question-title">질문 6: 최근 결산 재무상태가 신청 제한에 해당하지 않습니까?</div>
+            <div class="question-hint">힌트: 메인비즈는 부채비율 1,000% 이상이거나 완전 자본잠식 상태인 기업, 국세·지방세 체납 기업 등의 신청이 제한됩니다. 세부 기준은 메인비즈넷 공식 안내로 확인하세요.</div>
+            <div class="options">
+                <label><input type="radio" name="q6" value="yes"> 예</label>
+                <label><input type="radio" name="q6" value="no"> 아니오</label>
+                <label><input type="radio" name="q6" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="7">
+            <div class="question-title">질문 7: 자가진단에서 높게 적은 항목을 증빙으로 뒷받침할 수 있습니까?</div>
+            <div class="question-hint">힌트: 자가진단 점수를 뒷받침할 자료가 현장평가에서 확인됩니다. 증빙 없이 적은 점수는 현장에서 인정받기 어렵습니다.</div>
+            <div class="options">
+                <label><input type="radio" name="q7" value="yes"> 예</label>
+                <label><input type="radio" name="q7" value="no"> 아니오</label>
+                <label><input type="radio" name="q7" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="question-item" data-q="8">
+            <div class="question-title">질문 8: 유효기간 3년 동안 요건을 유지하고 만료 전에 연장 신청을 할 수 있습니까?</div>
+            <div class="question-hint">힌트: 연장 신청은 만료 90일 전부터 만료 후 30일까지 할 수 있고, 혜택이 끊기지 않으려면 만료 35일 전까지 신청해야 합니다.</div>
+            <div class="options">
+                <label><input type="radio" name="q8" value="yes"> 예</label>
+                <label><input type="radio" name="q8" value="no"> 아니오</label>
+                <label><input type="radio" name="q8" value="unknown"> 잘 모르겠음</label>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn" onclick="calculateResult()">자가진단 결과 확인하기</button>
+        </div>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div class="section" id="result-section">
+        <h2>자가진단 결과</h2>
+        <div id="result-banner" class="result-banner">
+            <h3 id="result-title"></h3>
+            <p id="result-desc"></p>
+        </div>
+
+        <div id="supplement-lists"></div>
+
+        <h2>질문별 판정 내역</h2>
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>질문</th>
+                    <th>내 답변</th>
+                    <th>판정</th>
+                    <th>사유</th>
+                </tr>
+            </thead>
+            <tbody id="result-table-body">
+                <!-- JS dynamic -->
+            </tbody>
+        </table>
+
+        <h2>근거 메타 정보</h2>
+        <table class="meta-table">
+            <tr><th>법률</th><td>중소기업 기술혁신 촉진법</td></tr>
+            <tr><th>이노비즈 운영규정</th><td>중소벤처기업부 고시 제2026-44호(2026.6.22)</td></tr>
+            <tr><th>메인비즈 운영규정</th><td>중소벤처기업부 고시 제2026-45호(2026.6.22 일부개정)</td></tr>
+            <tr><th>신청 채널</th><td>이노비즈넷(www.innobiz.net)·메인비즈넷(smes.go.kr/mainbiz)</td></tr>
+            <tr><th>자가진단 기준</th><td>이노비즈 650점·메인비즈 600점(1,000점 만점)</td></tr>
+            <tr><th>현장평가 기준</th><td>700점 이상(이노비즈는 기술평가등급 B등급 이상 추가)</td></tr>
+            <tr><th>유효기간</th><td>확인서 발급일로부터 3년</td></tr>
+            <tr><th>기준일</th><td>2026-11-13</td></tr>
+        </table>
+
+        <div class="disclaimer">
+            본 시뮬레이터는 참고용입니다. 최종 판정은 이노비즈넷(www.innobiz.net)과 메인비즈넷(smes.go.kr/mainbiz) 공식 안내에서 확인하시기 바랍니다.
+        </div>
+
+        <div class="btn-container">
+            <button class="btn" onclick="resetForm()" style="background: #4b5563;">다시 진단하기</button>
+        </div>
+    </div>
+
+    <div class="blog-footer">
+        <a href="https://blog.naver.com/lge130287/" target="_blank" class="blog-btn">자세한 해설: 블로그 글 보기</a>
+        <br>
+        <a href="https://blog.naver.com/lge130287/" target="_blank" class="blog-link">경영지도사 안경린의 중소기업 스케일업</a>
+    </div>
+</div>
+
+<script>
+    const questionsText = [
+        "업력이 3년 이상입니까?",
+        "중소기업기본법상 중소기업에 해당합니까?",
+        "연체·국세체납 등 신용정보 등록, 거래정지, 파산·회생·청산 절차에 해당하지 않습니까?",
+        "기술혁신 실적이 있습니까?",
+        "경영혁신 실적이 있습니까?",
+        "최근 결산 재무상태가 신청 제한에 해당하지 않습니까?",
+        "자가진단에서 높게 적은 항목을 증빙으로 뒷받침할 수 있습니까?",
+        "유효기간 3년 동안 요건을 유지하고 만료 전에 연장 신청을 할 수 있습니까?"
+    ];
+
+    const reasons = [
+        "이노비즈·메인비즈 공통 신청 요건 (업력 3년 이상)",
+        "중소기업기본법상 중소기업 규모 기준 충족 필요",
+        "신용정보 등록 및 부실징후 기업 신청 제한 사유 확인",
+        "이노비즈 평가를 위한 기술혁신 실적(특허, R&D 등)",
+        "메인비즈 평가를 위한 경영혁신 실적(조직, 마케팅 등)",
+        "재무상태 및 체납 등에 따른 신청 제한 여부",
+        "현장평가 시 자가진단 점수 입증을 위한 증빙 자료",
+        "인증 유지 및 연장 신청 기한 준수 요건"
+    ];
+
+    function calculateResult() {
+        const answers = [];
+        for (let i = 1; i <= 8; i++) {
+            const radios = document.getElementsByName(`q${i}`);
+            let val = null;
+            for (const r of radios) {
+                if (r.checked) {
+                    val = r.value;
+                    break;
+                }
+            }
+            if (!val) {
+                alert(`질문 ${i}에 답변해 주세요.`);
+                return;
+            }
+            answers.push(val);
+        }
+
+        // 판정 로직
+        const q1_3_no = answers.slice(0, 3).includes('no');
+        const q4 = answers[3] === 'yes';
+        const q5 = answers[4] === 'yes';
+        const has_unknown = answers.includes('unknown');
+
+        let resultType = ""; // 'need_check', 'innobiz', 'mainbiz', 'both', 'need_siljuk'
+        let title = "";
+        let desc = "";
+        let bannerClass = "";
+
+        if (q1_3_no) {
+            resultType = "need_check";
+            title = "신청 전 확인 필요";
+            desc = "기본 자격 항목을 먼저 정리한 뒤 신청하세요. 업력·규모·제외 사유는 신청 전에 반드시 확인해야 합니다.";
+            bannerClass = "danger";
+        } else if (q4 && !q5) {
+            resultType = "innobiz";
+            title = "이노비즈 방향";
+            desc = "기술혁신 실적이 강점입니다. 이노비즈넷에서 온라인 자가진단(650점 이상)을 먼저 해보세요.";
+            bannerClass = "success";
+        } else if (q5 && !q4) {
+            resultType = "mainbiz";
+            title = "메인비즈 방향";
+            desc = "경영혁신 실적이 강점입니다. 메인비즈넷에서 온라인 자가진단(600점 이상)을 먼저 해보세요.";
+            bannerClass = "success";
+        } else if (q4 && q5) {
+            resultType = "both";
+            title = "두 쪽 모두 가능 — 강점이 더 뚜렷한 쪽부터";
+            desc = "두 쪽 모두 신청 자격에 가깝습니다. 실적이 더 뚜렷하고 증빙이 잘 갖춰진 쪽부터 신청하는 것이 순서입니다.";
+            bannerClass = "warning";
+        } else {
+            resultType = "need_siljuk";
+            title = "실적 보완 필요";
+            desc = "기술혁신 실적과 경영혁신 실적 중 어느 쪽이든 먼저 쌓아야 합니다. 창업 1~2년차라면 벤처기업 확인이나 연구조직부터 확보해 두는 것도 방법입니다.";
+            bannerClass = "warning";
+        }
+
+        // 배너 적용
+        const banner = document.getElementById("result-banner");
+        banner.className = `result-banner ${bannerClass}`;
+        document.getElementById("result-title").innerText = title;
+        document.getElementById("result-desc").innerText = desc;
+
+        // 질문별 판정 내역표 작성
+        const tbody = document.getElementById("result-table-body");
+        tbody.innerHTML = "";
+
+        for (let i = 0; i < 8; i++) {
+            const ans = answers[i];
+            let badgeHtml = "";
+            let ansText = "";
+
+            if (ans === 'yes') {
+                ansText = "예";
+                badgeHtml = '<span class="badge badge-success">충족</span>';
+            } else if (ans === 'no') {
+                ansText = "아니오";
+                badgeHtml = '<span class="badge badge-danger">보완 필요</span>';
+            } else {
+                ansText = "잘 모르겠음";
+                badgeHtml = '<span class="badge badge-warning">확인 필요</span>';
+            }
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>Q${i+1}. ${questionsText[i]}</td>
+                <td>${ansText}</td>
+                <td>${badgeHtml}</td>
+                <td>${reasons[i]}</td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        // 보완 항목 / 확인 필요 항목 리스트
+        const supplement = document.getElementById("supplement-lists");
+        supplement.innerHTML = "";
+        const noItems = [];
+        const unknownItems = [];
+        for (let i = 0; i < 8; i++) {
+            if (answers[i] === 'no') noItems.push(`Q${i+1}. ${questionsText[i]}`);
+            if (answers[i] === 'unknown') unknownItems.push(`Q${i+1}. ${questionsText[i]}`);
+        }
+        if (noItems.length > 0) {
+            const box = document.createElement("div");
+            box.className = "supplement-box danger";
+            box.innerHTML = "<h4>보완 항목</h4><ul>" + noItems.map(t => `<li>${t}</li>`).join("") + "</ul>";
+            supplement.appendChild(box);
+        }
+        if (unknownItems.length > 0) {
+            const box = document.createElement("div");
+            box.className = "supplement-box warning";
+            box.innerHTML = "<h4>확인 필요 항목</h4><ul>" + unknownItems.map(t => `<li>${t}</li>`).join("") + "</ul><p style='margin-top:8px;'>잘 모르겠다고 답한 항목의 요건은 이노비즈넷·메인비즈넷 공식 안내로 확인한 뒤 신청하세요.</p>";
+            supplement.appendChild(box);
+        }
+
+        // 화면 전환
+        document.getElementById("form-section").style.display = "none";
+        document.getElementById("result-section").style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetForm() {
+        for (let i = 1; i <= 8; i++) {
+            const radios = document.getElementsByName(`q${i}`);
+            for (const r of radios) {
+                r.checked = false;
+            }
+        }
+        document.getElementById("result-section").style.display = "none";
+        document.getElementById("form-section").style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
