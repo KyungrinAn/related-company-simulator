@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>양식·자료 정리 준비도 자가진단 — Claude Projects 시작 전 점검</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #eff6ff;
+      --text: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg: #f9fafb;
+      --white: #ffffff;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --info-bg: #e0f2fe;
+      --info-border: #7dd3fc;
+      --info-text: #0369a1;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 20px;
+    }
+    .branding {
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: #111827;
+      line-height: 1.35;
+      margin-bottom: 8px;
+      word-break: keep-all;
+    }
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      word-break: keep-all;
+    }
+    .notice-box {
+      background-color: var(--primary-light);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 0.88rem;
+    }
+    .notice-box h2 {
+      font-size: 0.95rem;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+    .notice-box p {
+      margin-bottom: 6px;
+      color: #1e3a8a;
+    }
+    .notice-box .small-note {
+      font-size: 0.8rem;
+      color: #3b82f6;
+    }
+    .section-title {
+      font-size: 1.15rem;
+      color: #111827;
+      margin: 28px 0 14px 0;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* Flowchart */
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .step-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .step-card strong {
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .step-card span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .flow-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      text-align: right;
+    }
+    /* Comparison Table */
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    th {
+      background-color: #f3f4f6;
+      font-weight: 700;
+      color: #374151;
+      white-space: nowrap;
+    }
+    .level-badge {
+      display: inline-block;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #e2e8f0;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+    /* Questions */
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .question-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .question-label {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .question-hint {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      background: #f9fafb;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      user-select: none;
+    }
+    .radio-label:hover {
+      background: #f3f4f6;
+    }
+    .radio-label input[type="radio"] {
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover {
+      background-color: var(--primary-dark);
+    }
+    /* Results */
+    #result-section {
+      display: none;
+      margin-top: 32px;
+      border-top: 2px dashed var(--border);
+      padding-top: 24px;
+    }
+    .result-banner {
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .banner-success {
+      background-color: var(--success-bg);
+      border: 2px solid var(--success);
+      color: #064e3b;
+    }
+    .banner-warning {
+      background-color: var(--warning-bg);
+      border: 2px solid var(--warning);
+      color: #78350f;
+    }
+    .banner-danger {
+      background-color: var(--danger-bg);
+      border: 2px solid var(--danger);
+      color: #7f1d1d;
+    }
+    .result-banner h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+    .result-banner p {
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .current-level-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+    .current-level-box strong {
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+    /* Additional Notices */
+    .alert-box {
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .alert-danger {
+      background-color: var(--danger-bg);
+      border: 1px solid #fca5a5;
+      color: var(--danger);
+    }
+    .alert-warning {
+      background-color: var(--warning-bg);
+      border: 1px solid #fcd34d;
+      color: var(--warning);
+    }
+    .alert-info {
+      background-color: var(--info-bg);
+      border: 1px solid var(--info-border);
+      color: var(--info-text);
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .badge-ok {
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #86efac;
+    }
+    .badge-warn {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fca5a5;
+    }
+    .badge-check {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid #fde047;
+    }
+    /* Meta Box */
+    .meta-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+      margin: 20px 0;
+      color: #64748b;
+    }
+    .meta-box ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+    .disclaimer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin: 20px 0;
+      padding: 8px;
+      background: #f3f4f6;
+      border-radius: 4px;
+    }
+    /* Blog Footer */
+    .blog-footer {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .blog-btn {
+      display: inline-block;
+      background-color: #10b981;
+      color: var(--white);
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+      margin-bottom: 12px;
+    }
+    .blog-btn:hover {
+      background-color: #059669;
+    }
+    .brand-link {
+      display: block;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .brand-link:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 640px) {
+      .flow-steps {
+        grid-template-columns: 1fr;
+      }
+      .options {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .radio-label {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="branding">경영지도사 안경린의 중소기업 스케일업</div>
+    <h1>양식·자료 정리 준비도 자가진단</h1>
+    <div class="subtitle">Claude Projects 시작 전, 우리 회사 양식·자료 정리 준비도 점검</div>
+    <p style="margin-top: 8px; font-size: 0.88rem; color: #4b5563;">자주 쓰는 양식과 자료가 Projects에 올릴 준비가 됐는지, 8가지 항목으로 직접 점검해 보세요.</p>
+  </header>
+
+  <!-- 적용 안내 -->
+  <div class="notice-box">
+    <h2>적용 안내</h2>
+    <p>이 진단은 Claude Projects에 양식·자료를 올리기 전에 정리 수준을 점검하는 참고용 도구입니다.</p>
+    <p><strong>근거:</strong> Anthropic 도움말(Projects 구성·파일 개당 최대 30MB·컨텍스트 표준 200,000 토큰·무료 요금제 최대 5개·공유는 Team·Enterprise 요금제), Anthropic 데이터 사용 안내(개인 요금제 Free·Pro·Max는 모델 개선용 데이터 사용 여부를 설정에서 직접 정할 수 있음, 상용 요금제 Team·Enterprise·API는 기본적으로 학습에 쓰지 않음). 기준일: 2026-11-26.</p>
+    <div class="small-note">※ 주의: 요금제·한도·정책은 바뀔 수 있으니, 중요한 문서를 올리기 전에는 Anthropic 도움말과 사내 방침으로 직접 확인하세요.</div>
+  </div>
+
+  <!-- 절차 흐름 -->
+  <div class="section-title">Projects 준비 절차 (4단계)</div>
+  <div class="flow-steps">
+    <div class="step-card">
+      <strong>1단계: 양식·자료 모으기</strong>
+      <span>가장 자주 찾는 양식부터 한곳에 모으기</span>
+    </div>
+    <div class="step-card">
+      <strong>2단계: 지시문 쓰기</strong>
+      <span>자주 안 바뀌는 규칙만 적기</span>
+    </div>
+    <div class="step-card">
+      <strong>3단계: 자료 올리기</strong>
+      <span>최신 버전만 올리고 낡은 버전은 삭제</span>
+    </div>
+    <div class="step-card">
+      <strong>4단계: 새 대화에서 바로 쓰기</strong>
+      <span>새 조건만 입력하면 기준은 이미 정해져 있음</span>
+    </div>
+  </div>
+  <div class="flow-note">Projects는 정리된 자료를 바탕으로 답합니다. 자료가 최신 버전인지 먼저 확인하세요.</div>
+
+  <!-- 정리 수준 도표 -->
+  <div class="section-title">양식·자료 정리 수준 — 4단계</div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>단계</th>
+          <th>상태</th>
+          <th>특징</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="level-badge">1단계</span> 흩어짐</td>
+          <td>양식이 개인 PC·메일함에 흩어져 있음</td>
+          <td>찾을 때마다 다시 묻고 다시 설명함</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge">2단계</span> 모음</td>
+          <td>공유 폴더에 양식을 모아 둠</td>
+          <td>찾을 곳은 정해졌지만 버전이 섞여 있음</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge">3단계</span> 표준화</td>
+          <td>양식·버전·작성 기준을 문서로 정리함</td>
+          <td>담당자가 바뀌어도 같은 양식으로 이어짐</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge">4단계</span> Projects</td>
+          <td>양식·지시문·자료를 Projects에 일원화</td>
+          <td>새 대화에서도 같은 기준이 바로 적용됨</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 진단 문항 -->
+  <div class="section-title">준비도 진단 문항 (8항목)</div>
+  <form id="quiz-form">
+    <div class="question-list">
+      <!-- Q1 -->
+      <div class="question-item">
+        <label class="question-label">1. 자주 쓰는 양식(계약서·인보이스·체크리스트 등)이 정해져 있습니까?</label>
+        <span class="question-hint">힌트: 양식부터 정해져 있어야 Projects에 올릴 것이 정해집니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q1" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q1" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q1" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q2 -->
+      <div class="question-item">
+        <label class="question-label">2. 그 양식의 최신 버전을 누구나 같은 곳에서 찾을 수 있습니까?</label>
+        <span class="question-hint">힌트: 최신 버전을 찾는 곳이 정해져 있지 않으면, 낡은 양식으로 답하게 됩니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q2" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q2" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q2" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q3 -->
+      <div class="question-item">
+        <label class="question-label">3. 양식마다 담당자·버전·적용 기간이 파일명이나 문서에 적혀 있습니까?</label>
+        <span class="question-hint">힌트: 파일명에 기간을 붙이면(예: 가격표-2026-Q3.pdf) 낡은 기준을 참조하지 않습니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q3" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q3" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q3" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q4 -->
+      <div class="question-item">
+        <label class="question-label">4. 같은 업무를 맡은 사람이 바뀌어도, 양식·자료를 다시 설명하지 않고 이어서 할 수 있습니까?</label>
+        <span class="question-hint">힌트: 담당자가 바뀌어도 이어지면, 기준이 사람 머릿속이 아니라 문서에 있다는 뜻입니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q4" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q4" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q4" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q5 -->
+      <div class="question-item">
+        <label class="question-label">5. 자주 쓰는 문구·작성 기준(톤·형식·필수 항목)을 문서로 정리해 둔 것이 있습니까?</label>
+        <span class="question-hint">힌트: 자주 안 바뀌는 규칙은 지시문에 적고, 자주 바뀌는 사실은 파일에 둡니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q5" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q5" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q5" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q6 -->
+      <div class="question-item">
+        <label class="question-label">6. Claude(또는 다른 생성형 AI)에 같은 양식·자료를 대화마다 다시 붙여넣고 있습니까?</label>
+        <span class="question-hint">힌트: 대화마다 다시 붙여넣고 있다면 Projects 효과가 큽니다.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q6" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q6" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q6" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q7 -->
+      <div class="question-item">
+        <label class="question-label">7. 고객 개인정보·주민번호·계좌번호 같은 민감 정보가, 올리려는 양식·자료에 그대로 들어 있습니까?</label>
+        <span class="question-hint">힌트: 민감 정보는 지우거나 가린 사본으로 정리한 뒤 올리세요.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q7" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q7" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q7" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+      <!-- Q8 -->
+      <div class="question-item">
+        <label class="question-label">8. 업로드할 자료의 보관·공유 범위를 정해 둔 기준(사내 방침·요금제별 데이터 정책)이 있습니까?</label>
+        <span class="question-hint">힌트: 대외비 문서는 사내 방침을 먼저 확인하고, 요금제별 데이터 정책을 확인하세요.</span>
+        <div class="options">
+          <label class="radio-label"><input type="radio" name="q8" value="yes" required> 예</label>
+          <label class="radio-label"><input type="radio" name="q8" value="no"> 아니오</label>
+          <label class="radio-label"><input type="radio" name="q8" value="unknown"> 잘 모르겠음</label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn-submit">진단 결과 확인하기</button>
+  </form>
+
+  <!-- 진단 결과 -->
+  <div id="result-section">
+    <!-- 1) 판정 배너 -->
+    <div id="result-banner" class="result-banner">
+      <h3 id="banner-title"></h3>
+      <p id="banner-desc"></p>
+    </div>
+
+    <!-- 2) 현재 정리 수준 -->
+    <div class="current-level-box">
+      <strong>현재 정리 수준: </strong><span id="level-title"></span>
+      <p id="level-desc" style="margin-top: 4px; color: #475569;"></p>
+    </div>
+
+    <!-- 추가 경고 / 안내 박스들 -->
+    <div id="alert-container"></div>
+
+    <!-- 3) 질문별 판정 내역표 -->
+    <div class="section-title">질문별 상세 판정 내역</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 40%;">질문</th>
+            <th style="width: 15%;">내 답변</th>
+            <th style="width: 15%;">판정</th>
+            <th style="width: 30%;">사유</th>
+          </tr>
+        </thead>
+        <tbody id="detail-table-body">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4) 근거 메타표 -->
+    <div class="meta-box">
+      <strong>판정 및 설정 근거 안내</strong>
+      <ul>
+        <li><strong>근거:</strong> Anthropic 도움말 (Projects 구성, 파일 개당 최대 30MB, 컨텍스트 표준 200,000 토큰, 무료 요금제 최대 5개, 공유는 Team·Enterprise 요금제)</li>
+        <li><strong>데이터 정책:</strong> Anthropic 데이터 사용 안내 (개인 요금제 Free·Pro·Max는 모델 개선용 데이터 사용 여부 설정 선택 가능, 상용 요금제 Team·Enterprise·API는 기본적으로 학습에 쓰지 않음)</li>
+        <li><strong>기준일:</strong> 2026-11-26</li>
+      </ul>
+    </div>
+
+    <!-- 면책 문구 -->
+    <div class="disclaimer">
+      본 진단은 참고용입니다. 최종 판단은 Anthropic 도움말과 사내 방침으로 확인하시기 바랍니다.
+    </div>
+  </div>
+
+  <!-- 하단 블로그 푸터 -->
+  <footer class="blog-footer">
+    <a href="https://blog.naver.com/lge130287/" target="_blank" rel="noopener noreferrer" class="blog-btn">
+      자세한 해설: 블로그 글 보기
+    </a>
+    <a href="https://blog.naver.com/lge130287/" target="_blank" rel="noopener noreferrer" class="brand-link">
+      경영지도사 안경린의 중소기업 스케일업
+    </a>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('quiz-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const answers = {
+      q1: document.querySelector('input[name="q1"]:checked')?.value,
+      q2: document.querySelector('input[name="q2"]:checked')?.value,
+      q3: document.querySelector('input[name="q3"]:checked')?.value,
+      q4: document.querySelector('input[name="q4"]:checked')?.value,
+      q5: document.querySelector('input[name="q5"]:checked')?.value,
+      q6: document.querySelector('input[name="q6"]:checked')?.value,
+      q7: document.querySelector('input[name="q7"]:checked')?.value,
+      q8: document.querySelector('input[name="q8"]:checked')?.value
+    };
+
+    // 질문 1~5 중 '아니오' 개수 계산
+    const q1to5 = [answers.q1, answers.q2, answers.q3, answers.q4, answers.q5];
+    const noCount = q1to5.filter(val => val === 'no').length;
+
+    let bannerClass = '';
+    let bannerTitle = '';
+    let bannerDesc = '';
+    let levelTitle = '';
+    let levelDesc = '';
+
+    if (noCount === 0) {
+      bannerClass = 'banner-success';
+      bannerTitle = 'Projects 시작 준비 완료';
+      bannerDesc = '양식·버전·작성 기준이 정리돼 있습니다. 프로젝트를 만들고 지시문을 적어 바로 시작할 수 있습니다.';
+      levelTitle = '3단계 이상 (표준화 ~ Projects 일원화)';
+      levelDesc = '양식과 작성 기준이 정립되어 있어 Projects에 올려 즉시 업무 효율을 높일 수 있는 상태입니다.';
+    } else if (noCount === 1 || noCount === 2) {
+      bannerClass = 'banner-warning';
+      bannerTitle = '기본 정리부터 시작';
+      bannerDesc = '양식·버전·작성 기준 중 일부가 아직 정리되지 않았습니다. 자주 쓰는 양식 세 가지부터 모아 최신 버전을 정한 뒤 Projects에 올리세요.';
+      levelTitle = '2단계 (모음)';
+      levelDesc = '자료를 모아두었으나 버전 관리 및 작성 기준 일원화가 추가로 필요합니다.';
+    } else {
+      bannerClass = 'banner-danger';
+      bannerTitle = '양식·자료 정리부터';
+      bannerDesc = '양식·자료가 아직 흩어져 있습니다. Projects에 올리기 전에 양식을 정하고 최신 버전을 한곳에 모으는 것이 순서입니다.';
+      levelTitle = '1단계 (흩어짐)';
+      levelDesc = '양식이 개인별로 흩어져 있으므로, 프로젝트 등록 전 핵심 양식 규격화가 선행되어야 합니다.';
+    }
+
+    // 결과 배너 반영
+    const bannerElem = document.getElementById('result-banner');
+    bannerElem.className = 'result-banner ' + bannerClass;
+    document.getElementById('banner-title').textContent = bannerTitle;
+    document.getElementById('banner-desc').textContent = bannerDesc;
+    document.getElementById('level-title').textContent = levelTitle;
+    document.getElementById('level-desc').textContent = levelDesc;
+
+    // 추가 알림 박스 구성
+    const alertContainer = document.getElementById('alert-container');
+    alertContainer.innerHTML = '';
+
+    // Q7 예 경고
+    if (answers.q7 === 'yes') {
+      const el = document.createElement('div');
+      el.className = 'alert-box alert-danger';
+      el.innerHTML = '<strong>[주의] 민감 정보 정리부터</strong><span>민감 정보를 지우거나 가린 사본으로 정리한 뒤 올리세요. (개인정보·계좌번호 등 노출 방지)</span>';
+      alertContainer.appendChild(el);
+    }
+
+    // Q6 예 안내
+    if (answers.q6 === 'yes') {
+      const el = document.createElement('div');
+      el.className = 'alert-box alert-info';
+      el.innerHTML = '<strong>[효과 안내] 반복 붙여넣기 해소 효과 큼</strong><span>같은 양식·자료를 대화마다 다시 붙여넣고 있다면, Projects에 한 번 정리해 두는 것만으로 반복이 줄어듭니다.</span>';
+      alertContainer.appendChild(el);
+    }
+
+    // Q8 아니오 경고
+    if (answers.q8 === 'no') {
+      const el = document.createElement('div');
+      el.className = 'alert-box alert-warning';
+      el.innerHTML = '<strong>[점검 필요] 보관·공유 기준 확인 필요</strong><span>대외비 문서는 사내 방침을 먼저 확인하고, 요금제별 데이터 정책을 확인하세요.</span>';
+      alertContainer.appendChild(el);
+    }
+
+    // 잘 모르겠음 리스트 점검
+    const unknownList = [];
+    const questionsMeta = [
+      { id: 'q1', num: '1번', text: '자주 쓰는 양식 지정' },
+      { id: 'q2', num: '2번', text: '양식 최신 버전 보관처' },
+      { id: 'q3', num: '3번', text: '양식 담당자·버전·적용 기간 명시' },
+      { id: 'q4', num: '4번', text: '담당자 변경 시 업무 인수인계 표준화' },
+      { id: 'q5', num: '5번', text: '문구·작성 기준(톤·형식 등) 문서화' },
+      { id: 'q6', num: '6번', text: 'AI 대화마다 반복 붙여넣기 여부' },
+      { id: 'q7', num: '7번', text: '민감 개인정보 포함 여부' },
+      { id: 'q8', num: '8번', text: '자료 보관·공유 기준(사내 방침 등)' }
+    ];
+
+    questionsMeta.forEach(q => {
+      if (answers[q.id] === 'unknown') {
+        unknownList.push(`${q.num}(${q.text})`);
+      }
+    });
+
+    if (unknownList.length > 0) {
+      const el = document.createElement('div');
+      el.className = 'alert-box alert-warning';
+      el.innerHTML = `<strong>[확인 필요 항목] 현황 파악 필요</strong><span>다음 항목의 정확한 현황 확인이 필요합니다: ${unknownList.join(', ')}</span>`;
+      alertContainer.appendChild(el);
+    }
+
+    // 질문별 판정 내역표 생성
+    const rawQuestions = [
+      {
+        q: "1. 자주 쓰는 양식(계약서·인보이스 등) 지정",
+        ans: answers.q1,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: '프로젝트에 등록할 핵심 양식이 선정되어 있습니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '자주 쓰는 핵심 양식 정의가 선행되어야 합니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '회사 내 자주 쓰이는 양식 범위를 먼저 파악해야 합니다.' };
+        }
+      },
+      {
+        q: "2. 양식 최신 버전의 단일 위치 보관",
+        ans: answers.q2,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: '최신 버전이 일원화되어 낡은 양식 참조 위험이 적습니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '최신 양식 저장소가 없으면 구버전으로 답변이 생성됩니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '공식 최신 양식이 어디에 보관되는지 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "3. 파일명/문서 내 버전·기간 표기",
+        ans: answers.q3,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: '버전 및 기간 표기로 기준 혼선을 사전에 차단합니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '파일명에 기간·버전을 적어야 낡은 문서를 참조하지 않습니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '사내 양식 파일명 규칙 및 개정 이력 표기 여부 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "4. 인수인계 시 문서 기준 업무 지속성",
+        ans: answers.q4,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: '업무 기준이 개인의 머리가 아닌 문서로 구조화되어 있습니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '업무 규칙이 문서화되지 않아 시스템화가 어렵습니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '담당자 교체 시 업무 지속성 유지 여부 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "5. 자주 쓰는 문구·작성 기준 문서화",
+        ans: answers.q5,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: 'Projects 커스텀 지시문에 기입할 규칙이 준비되어 있습니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '자주 안 바뀌는 작성 규칙을 미리 정리해야 효과적입니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '기존에 작성해 둔 서식 작성 기준이 있는지 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "6. 대화마다 양식·자료 반복 붙여넣기 여부",
+        ans: answers.q6,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-warn', text: '보완 필요', reason: '반복 붙여넣기 중 — Projects로 해소 가능' };
+          if (val === 'no') return { badge: 'badge-ok', text: '충족', reason: '반복 붙여넣기 비효율이 없거나 이미 구조화되어 있습니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '생성형 AI 사용 시 반복 입력 패턴 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "7. 민감 정보(주민번호·계좌 등) 포함 여부",
+        ans: answers.q7,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-warn', text: '보완 필요', reason: '민감 정보가 그대로 들어 있음' };
+          if (val === 'no') return { badge: 'badge-ok', text: '충족', reason: '민감 정보가 배제되어 안전한 업로드가 가능합니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '문서 내 마스킹 처리 대상 개인정보 확인이 필요합니다.' };
+        }
+      },
+      {
+        q: "8. 보관·공유 범위 기준(사내 방침 등)",
+        ans: answers.q8,
+        rule: (val) => {
+          if (val === 'yes') return { badge: 'badge-ok', text: '충족', reason: '사내 보안 규정 및 클라우드 업로드 기준이 수립되어 있습니다.' };
+          if (val === 'no') return { badge: 'badge-warn', text: '보완 필요', reason: '대외비 문서는 사내 방침과 요금제 정책을 먼저 확인해야 합니다.' };
+          return { badge: 'badge-check', text: '확인 필요', reason: '사내 보안 방침 및 계정 데이터 정책 확인이 필요합니다.' };
+        }
+      }
+    ];
+
+    const tbody = document.getElementById('detail-table-body');
+    tbody.innerHTML = '';
+
+    const ansLabelMap = { yes: '예', no: '아니오', unknown: '잘 모르겠음' };
+
+    rawQuestions.forEach(item => {
+      const res = item.rule(item.ans);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.q}</td>
+        <td>${ansLabelMap[item.ans] || '-'}</td>
+        <td><span class="badge ${res.badge}">${res.text}</span></td>
+        <td>${res.reason}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // 화면 표시 및 스크롤 이동
+    const resultSection = document.getElementById('result-section');
+    resultSection.style.display = 'block';
+    resultSection.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
